@@ -16,6 +16,7 @@ import logging
 
 app = Flask(__name__)
 
+# Variables de entorno (para otros parámetros como el token de ClickUp)
 CLICKUP_TOKEN = os.environ.get("CLICKUP_TOKEN")
 EMAIL_RECIPIENT = os.environ.get("EMAIL_RECIPIENT")         # Ejemplo: cgallego@robotix.es
 MAILJET_API_KEY = os.environ.get("API_PUBLICA_MAILJET")  # Tu API key pública
@@ -24,13 +25,12 @@ MAILJET_API_SECRET = os.environ.get("API_SECRETA_MAILJET")  # Tu API key privada
 # Los alcances necesarios para enviar correos
 SCOPES = ['https://www.googleapis.com/auth/gmail.send']
 
-# Ruta a los archivos de credenciales y token desde las variables de entorno
-CRED_FILE = os.getenv("CRED_FILE")  # Se espera que esté en una variable de entorno
-TOKEN_FILE = os.getenv("TOK_FILE")  # Se espera que esté en una variable de entorno
+# Ruta a los archivos de credenciales y token (se deben cargar desde el repositorio privado)
+CRED_FILE_PATH = "credentials.json"  # Suponiendo que los archivos están en el directorio de trabajo
+TOKEN_FILE_PATH = "token.json"
 
 @app.route('/webhook', methods=['POST'])
 def webhook():
-    # Extraer task_id desde la URL (query parameter)
     task_id = request.args.get('id')
 
     if not task_id:
@@ -76,7 +76,7 @@ def get_task_info(task_id):
     if response.status_code == 200:
         task_data = response.json()
         print(f"DADES_TASK: {task_data}")
-        return task_data  # 🔁 Ahora retornamos todo el objeto, no solo los custom fields
+        return task_data
     else:
         print("Error al consultar la tarea:", response.text)
         return None
@@ -105,34 +105,27 @@ def generate_txt(task_data):
 
     return filename
 
-def write_secret_file(env_var_value, filename):
-    """Escribe el contenido base64 de una variable de entorno en un archivo."""
-    if env_var_value:
-        content = base64.b64decode(env_var_value.encode('utf-8'))
-        with open(filename, 'wb') as f:
-            f.write(content)
-        print(f"✅ Archivo '{filename}' escrito correctamente.")
-    else:
-        print(f"❌ La variable de entorno para '{filename}' está vacía o no existe.")
-
 def authenticate_gmail_api():
-    print("CRED_FILE existe:", bool(CRED_FILE))
-    print("TOKEN_FILE existe:", bool(TOKEN_FILE))
     """Autenticarse con Gmail usando los secretos decodificados."""
-    write_secret_file(CRED_FILE, "credentials.json")
-    write_secret_file(TOKEN_FILE, "token.json")
+    if not os.path.exists(CRED_FILE_PATH):
+        print("❌ El archivo 'credentials.json' no se encuentra.")
+        raise FileNotFoundError("El archivo 'credentials.json' no se encuentra en el directorio.")
+    
+    if not os.path.exists(TOKEN_FILE_PATH):
+        print("❌ El archivo 'token.json' no se encuentra.")
+        raise FileNotFoundError("El archivo 'token.json' no se encuentra en el directorio.")
 
     creds = None
-    if os.path.exists("token.json"):
-        creds = Credentials.from_authorized_user_file("token.json", SCOPES)
+    if os.path.exists(TOKEN_FILE_PATH):
+        creds = Credentials.from_authorized_user_file(TOKEN_FILE_PATH, SCOPES)
 
     if not creds or not creds.valid:
         if creds and creds.expired and creds.refresh_token:
             creds.refresh(Request())
         else:
-            flow = InstalledAppFlow.from_client_secrets_file("credentials.json", SCOPES)
+            flow = InstalledAppFlow.from_client_secrets_file(CRED_FILE_PATH, SCOPES)
             creds = flow.run_local_server(port=0)
-        with open("token.json", 'w') as token:
+        with open(TOKEN_FILE_PATH, 'w') as token:
             token.write(creds.to_json())
 
     return creds
