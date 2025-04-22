@@ -4,13 +4,14 @@ import os
 from jinja2 import Template
 import smtplib
 from email.message import EmailMessage
+from mailjet_rest import Client
 
 app = Flask(__name__)
 
 CLICKUP_TOKEN = os.environ.get("CLICKUP_TOKEN")
-EMAIL_SENDER = "c360@robotix.es"
-EMAIL_PASSWORD = "Worc3st3r45+"  # Te recomiendo pasar esto como variable de entorno en producción
-EMAIL_RECIPIENT = "cgallego@robotix.es"
+EMAIL_RECIPIENT = os.environ.get("EMAIL_RECIPIENT")         # Ejemplo: cgallego@robotix.es
+MAILJET_API_KEY = os.environ.get("API_PUBLICA_MAILJET")  # Tu API key pública
+MAILJET_API_SECRET = os.environ.get("API_SECRETA_MAILJET")  # Tu API key privada
 
 @app.route('/webhook', methods=['POST'])
 def webhook():
@@ -74,15 +75,42 @@ def generate_txt(task_data):
 
 
 def send_email_with_attachment(filename):
-    msg = EmailMessage()
-    msg['Subject'] = "Exportación desde ClickUp"
-    msg['From'] = EMAIL_SENDER
-    msg['To'] = EMAIL_RECIPIENT
-    msg.set_content("Adjunto el fichero generado a partir de la tarea de ClickUp.")
+    with open(filename, "r", encoding="utf-8") as f:
+        contenido = f.read()
 
-    with open(filename, "rb") as f:
-        msg.add_attachment(f.read(), maintype="text", subtype="plain", filename=filename)
+    # Configura el cliente Mailjet
+    mailjet = Client(auth=(MAILJET_API_KEY, MAILJET_API_SECRET), version='v3.1')
 
-    with smtplib.SMTP_SSL("smtp.ionos.es", 465) as smtp:
-        smtp.login(EMAIL_SENDER, EMAIL_PASSWORD)
-        smtp.send_message(msg)
+    # Prepara el cuerpo del correo
+    data = {
+        'Messages': [
+            {
+                "From": {
+                    "Email": "example@mailjet.com",  # Usamos el remitente predeterminado de Mailjet
+                    "Name": "ClickUp Informe"  # Nombre del remitente
+                },
+                "To": [
+                    {
+                        "Email": EMAIL_RECIPIENT,
+                        "Name": "Carles Gallego"  # Nombre del destinatario
+                    }
+                ],
+                "Subject": "📩 Exportación informe desde ClickUp",
+                "TextPart": "Adjunto el contenido de la tarea:",
+                "Attachments": [
+                    {
+                        "ContentType": "text/plain",
+                        "Filename": filename,
+                        "Base64Content": contenido.encode("utf-8").decode("utf-8")  # Convierte el contenido a base64
+                    }
+                ]
+            }
+        ]
+    }
+
+    # Envía el correo
+    result = mailjet.send(data=data)
+    if result.status_code == 200:
+        print("✅ Email enviado con Mailjet")
+    else:
+        print("❌ Error al enviar con Mailjet:", result.status_code, result.text)
