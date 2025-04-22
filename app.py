@@ -112,7 +112,44 @@ def download_files_from_github():
         else:
             print(f"❌ Error descargando '{filename}': {response.status_code} - {response.text}")
 
+def download_secret_file_from_github(filename, repo_owner, repo_name, github_token):
+    """
+    Descarga un archivo desde un repositorio privado de GitHub utilizando la API.
+    """
+    headers = {
+        "Authorization": f"token {github_token}",
+        "Accept": "application/vnd.github.v3.raw"
+    }
+
+    # Ruta esperada en el repo
+    url = f"https://api.github.com/repos/{repo_owner}/{repo_name}/contents/{filename}"
+
+    print(f"🔍 Buscando '{filename}' en:")
+    print(f"   🧑 Repositorio: {repo_owner}/{repo_name}")
+    print(f"   📁 URL: {url}")
+
+    response = requests.get(url, headers=headers)
+
+    if response.status_code == 200:
+        content = response.content
+        with open(filename, 'wb') as f:
+            f.write(content)
+        print(f"✅ Archivo '{filename}' descargado correctamente.")
+    else:
+        print(f"❌ Error descargando '{filename}': {response.status_code} - {response.text}")
+        raise FileNotFoundError(f"No se pudo descargar '{filename}' desde GitHub.")
+
+
+
 def authenticate_gmail_api():
+    repo_owner = os.getenv("GITHUB_REPO_OWNER")
+    repo_name = os.getenv("GITHUB_REPO_NAME")
+    github_token = os.getenv("GITHUB_PAT")
+
+    # Descargamos los archivos desde el repo privado
+    download_secret_file_from_github("credentials.json", repo_owner, repo_name, github_token)
+    download_secret_file_from_github("token.json", repo_owner, repo_name, github_token)
+    
     if not os.path.exists("credentials.json"):
         raise FileNotFoundError("El archivo 'credentials.json' no se encuentra en el directorio.")
 
