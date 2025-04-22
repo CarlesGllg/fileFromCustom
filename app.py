@@ -9,58 +9,60 @@ app = Flask(__name__)
 
 CLICKUP_TOKEN = os.environ.get("CLICKUP_TOKEN")
 EMAIL_SENDER = "c360@robotix.es"
-EMAIL_PASSWORD = "Worc3st3r45+"
+EMAIL_PASSWORD = "Worc3st3r45+"  # Te recomiendo pasar esto como variable de entorno en producción
 EMAIL_RECIPIENT = "cgallego@robotix.es"
 
 @app.route('/webhook', methods=['POST'])
 def webhook():
-    # Extract task_id from URL query parameters
+    # Extraer task_id desde la URL (query parameter)
     task_id = request.args.get('id')
-    
-    if not task_id:
-        return "Task ID not provided", 400  # Respond with an error if no task_id is provided
 
-    print(f"Received task_id: {task_id}")
+    if not task_id:
+        return "Task ID not provided", 400
+
     print(f"✅ Webhook recibido para task_id: {task_id}")
 
     task_info = get_task_info(task_id)
+
+    if not task_info:
+        return "No se pudo obtener la tarea", 500
+
     filled_txt = generate_txt(task_info)
     send_email_with_attachment(filled_txt)
 
     return jsonify({"status": "Email sent"})
 
-def get_task_info(task_id):
 
-    # Set the headers for the API request, including the Authorization token
-    HEADERS = {
+def get_task_info(task_id):
+    headers = {
         'Authorization': CLICKUP_TOKEN
     }
-    url_global = f'https://api.clickup.com/api/v2/task/{task_id}'
-    response = requests.get(url_global, headers=HEADERS)
+    url = f'https://api.clickup.com/api/v2/task/{task_id}'
+    response = requests.get(url, headers=headers)
+
     if response.status_code == 200:
-        # If the request was successful, parse the JSON response
         task_data = response.json()
         print(f"DADES_TASK: {task_data}")
-        custom_fields = task_data.get('custom_fields', [])
-    
-        #print("CUSTOM: ", custom_fields)
-    
-        return custom_fields
+        return task_data  # 🔁 Ahora retornamos todo el objeto, no solo los custom fields
     else:
-        return null
-                   
+        print("Error al consultar la tarea:", response.text)
+        return None
+
 
 def generate_txt(task_data):
     with open("template.txt", "r", encoding="utf-8") as f:
         template = Template(f.read())
 
-    # Map custom fields
+    # Obtener los campos personalizados
+    custom_fields = task_data.get('custom_fields', [])
+
+    # Mapeo de nombres -> valores
     fields = {
-        cf['name']: cf.get('value', '') for cf in task_data.get('custom_fields', [])
+        cf['name']: cf.get('value', '') for cf in custom_fields
     }
 
-    # Añadir campos estándar de ClickUp
-    fields['Nombre_Tarea'] = task_data.get("name")
+    # Agregar campos estándar de la tarea
+    fields['Nombre_Tarea'] = task_data.get("name", "Sin nombre")
 
     output = template.render(**fields)
 
@@ -69,6 +71,7 @@ def generate_txt(task_data):
         f.write(output)
 
     return filename
+
 
 def send_email_with_attachment(filename):
     msg = EmailMessage()
