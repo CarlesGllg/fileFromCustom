@@ -8,150 +8,143 @@ from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 from email.mime.multipart import MIMEMultipart
 from email.mime.base import MIMEBase
+from email.mime.text import MIMEText
 from email import encoders
 import base64
 import json
-import time
 import logging
 
 app = Flask(__name__)
 
-# Variables de entorno (para otros parámetros como el token de ClickUp)
-CLICKUP_TOKEN = os.environ.get("CLICKUP_TOKEN")
-EMAIL_RECIPIENT = os.environ.get("EMAIL_RECIPIENT")         # Ejemplo: cgallego@robotix.es
-MAILJET_API_KEY = os.environ.get("API_PUBLICA_MAILJET")  # Tu API key pública
-MAILJET_API_SECRET = os.environ.get("API_SECRETA_MAILJET")  # Tu API key privada
+# =======================
+# CONFIGURACIÓN
+# =======================
 
-# Los alcances necesarios para enviar correos
+CLICKUP_TOKEN = os.environ.get("CLICKUP_TOKEN")
+EMAIL_RECIPIENT = os.environ.get("EMAIL_RECIPIENT")
+MAILJET_API_KEY = os.environ.get("API_PUBLICA_MAILJET")
+MAILJET_API_SECRET = os.environ.get("API_SECRETA_MAILJET")
+
+GITHUB_TOKEN = os.environ.get("GITHUB_TOKEN")
+GITHUB_REPO_OWNER = "cgallego@robotix.es"         # 🔁 Cambia por tu nombre de usuario de GitHub
+GITHUB_REPO_NAME = "https://github.com/CarlesGllg/myfiles"        # 🔁 Cambia por el nombre de tu repo privado
+GITHUB_FILES = ["credentials.json", "token.json"]
+
 SCOPES = ['https://www.googleapis.com/auth/gmail.send']
 
-# Ruta a los archivos de credenciales y token (se deben cargar desde el repositorio privado)
-CRED_FILE_PATH = "credentials.json"  # Suponiendo que los archivos están en el directorio de trabajo
-TOKEN_FILE_PATH = "token.json"
+# =======================
+# ENDPOINT PRINCIPAL
+# =======================
 
 @app.route('/webhook', methods=['POST'])
 def webhook():
     task_id = request.args.get('id')
-
     if not task_id:
         return "Task ID not provided", 400
 
     print(f"✅ Webhook recibido para task_id: {task_id}")
 
     task_info = get_task_info(task_id)
-
     if not task_info:
         return "No se pudo obtener la tarea", 500
 
-    filled_txt = generate_txt(task_info)
-    
-    creds = authenticate_gmail_api()
-    
-    try:
-        # Crear el servicio de Gmail
-        service = build('gmail', 'v1', credentials=creds)
-        
-        sender = "c360@robotix.es"
-        recipient = EMAIL_RECIPIENT  # Este es el correo del destinatario
-        subject = "📩 Exportación de ficha desde ClickUp"
-        body = "Adjunto el archivo generado a partir de los datos de ClickUp."
-        file_path = 'resultados.txt'  # Ruta del archivo que quieres adjuntar
-        
-        # Enviar el correo
-        send_email_with_attachment(service, sender, recipient, subject, body, file_path)
+    generate_txt(task_info)
 
+    # Asegurarse de tener credenciales locales descargadas
+    download_files_from_github()
+
+    creds = authenticate_gmail_api()
+    try:
+        service = build('gmail', 'v1', credentials=creds)
+        send_email_with_attachment(
+            service,
+            sender="c360@robotix.es",
+            to=EMAIL_RECIPIENT,
+            subject="📩 Exportación de ficha desde ClickUp",
+            body="Adjunto el archivo generado a partir de los datos de ClickUp.",
+            file_path="resultados.txt"
+        )
     except Exception as error:
         print(f"Ha ocurrido un error: {error}")
 
     return jsonify({"status": "Email sent"})
 
+# =======================
+# FUNCIONES AUXILIARES
+# =======================
 
 def get_task_info(task_id):
-    headers = {
-        'Authorization': CLICKUP_TOKEN
-    }
     url = f'https://api.clickup.com/api/v2/task/{task_id}'
+    headers = {'Authorization': CLICKUP_TOKEN}
     response = requests.get(url, headers=headers)
-
     if response.status_code == 200:
-        task_data = response.json()
-        print(f"DADES_TASK: {task_data}")
-        return task_data
-    else:
-        print("Error al consultar la tarea:", response.text)
-        return None
-
+        return response.json()
+    print("Error al consultar la tarea:", response.text)
+    return None
 
 def generate_txt(task_data):
     with open("template.txt", "r", encoding="utf-8") as f:
         template = Template(f.read())
 
-    # Obtener los campos personalizados
     custom_fields = task_data.get('custom_fields', [])
-
-    # Mapeo de nombres -> valores
-    fields = {
-        cf['name']: cf.get('value', '') for cf in custom_fields
-    }
-
-    # Agregar campos estándar de la tarea
+    fields = {cf['name']: cf.get('value', '') for cf in custom_fields}
     fields['Nombre_Tarea'] = task_data.get("name", "Sin nombre")
 
     output = template.render(**fields)
-
-    filename = "resultados.txt"
-    with open(filename, "w", encoding="utf-8") as f:
+    with open("resultados.txt", "w", encoding="utf-8") as f:
         f.write(output)
 
-    return filename
+def download_files_from_github():
+    headers = {
+        "Authorization": f"token {GITHUB_TOKEN}",
+        "Accept": "application/vnd.github.v3.raw"
+    }
+
+    for filename in GITHUB_FILES:
+        url = f"https://api.github.com/repos/{GITHUB_REPO_OWNER}/{GITHUB_REPO_NAME}/contents/{filename}"
+        response = requests.get(url, headers=headers)
+
+        if response.status_code == 200:
+            content = base64.b64decode(response.json()["content"])
+            with open(filename, "wb") as f:
+                f.write(content)
+            print(f"✅ '{filename}' descargado correctamente.")
+        else:
+            print(f"❌ Error descargando '{filename}': {response.status_code} - {response.text}")
 
 def authenticate_gmail_api():
-    """Autenticarse con Gmail usando los secretos decodificados."""
-    if not os.path.exists(CRED_FILE_PATH):
-        print("❌ El archivo 'credentials.json' no se encuentra.")
+    if not os.path.exists("credentials.json"):
         raise FileNotFoundError("El archivo 'credentials.json' no se encuentra en el directorio.")
-    
-    if not os.path.exists(TOKEN_FILE_PATH):
-        print("❌ El archivo 'token.json' no se encuentra.")
-        raise FileNotFoundError("El archivo 'token.json' no se encuentra en el directorio.")
 
     creds = None
-    if os.path.exists(TOKEN_FILE_PATH):
-        creds = Credentials.from_authorized_user_file(TOKEN_FILE_PATH, SCOPES)
+    if os.path.exists("token.json"):
+        creds = Credentials.from_authorized_user_file("token.json", SCOPES)
 
     if not creds or not creds.valid:
         if creds and creds.expired and creds.refresh_token:
             creds.refresh(Request())
         else:
-            flow = InstalledAppFlow.from_client_secrets_file(CRED_FILE_PATH, SCOPES)
+            flow = InstalledAppFlow.from_client_secrets_file("credentials.json", SCOPES)
             creds = flow.run_local_server(port=0)
-        with open(TOKEN_FILE_PATH, 'w') as token:
+        with open("token.json", 'w') as token:
             token.write(creds.to_json())
 
     return creds
 
-
 def create_message_with_attachment(sender, to, subject, body, file_path):
-    """Crea un mensaje con un archivo adjunto codificado en base64."""
-    # Crear un mensaje MIME
     message = MIMEMultipart()
     message['From'] = sender
     message['To'] = to
     message['Subject'] = subject
+    message.attach(MIMEText(body, 'plain'))
 
-    # Añadir el cuerpo del mensaje
-    message.attach(body)
-
-    # Leer el archivo y codificarlo en base64
     try:
         with open(file_path, 'rb') as f:
-            # Crear el objeto MIMEBase
             part = MIMEBase('application', 'octet-stream')
             part.set_payload(f.read())
             encoders.encode_base64(part)
             part.add_header('Content-Disposition', f'attachment; filename={os.path.basename(file_path)}')
             message.attach(part)
-
     except Exception as e:
         print(f"Error al adjuntar el archivo: {e}")
         return None
@@ -159,16 +152,14 @@ def create_message_with_attachment(sender, to, subject, body, file_path):
     raw_message = base64.urlsafe_b64encode(message.as_bytes()).decode('utf-8')
     return {'raw': raw_message}
 
-
 def send_email_with_attachment(service, sender, to, subject, body, file_path):
-    """Envía un correo electrónico con un archivo adjunto a través de la API de Gmail."""
     try:
         message = create_message_with_attachment(sender, to, subject, body, file_path)
         if message:
-            message_sent = service.users().messages().send(userId="me", body=message).execute()
-            print(f"Correo enviado con ID: {message_sent['id']}")
+            sent = service.users().messages().send(userId="me", body=message).execute()
+            print(f"📨 Correo enviado con ID: {sent['id']}")
         else:
-            print("No se pudo crear el mensaje.")
+            print("⚠️ No se pudo crear el mensaje.")
     except HttpError as error:
-        print(f"Hubo un error: {error}")
+        print(f"❌ Error al enviar el correo: {error}")
         raise
