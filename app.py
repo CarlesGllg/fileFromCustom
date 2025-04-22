@@ -7,7 +7,7 @@ from email.message import EmailMessage
 
 app = Flask(__name__)
 
-CLICKUP_TOKEN = "pk_82705525_4FUTKYOJDRLEJSF270VOWZW3RQZ80F0T"
+CLICKUP_TOKEN = os.environ.get("CLICKUP_TOKEN")
 EMAIL_SENDER = "c360@robotix.es"
 EMAIL_PASSWORD = "Worc3st3r45+"
 EMAIL_RECIPIENT = "cgallego@robotix.es"
