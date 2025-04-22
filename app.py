@@ -75,8 +75,8 @@ def generate_txt(task_data):
 
 
 def send_email_with_attachment(filename):
-    with open(filename, "r", encoding="utf-8") as f:
-        contenido = f.read()
+    with open(filename, "rb") as f:
+        base64_content = base64.b64encode(f.read()).decode("utf-8")
 
     mailjet = Client(auth=(MAILJET_API_KEY, MAILJET_API_SECRET), version='v3.1')
 
@@ -84,7 +84,7 @@ def send_email_with_attachment(filename):
         'Messages': [
             {
                 "From": {
-                    "Email": "example@mailjet.com",  # Reemplaza con remitente verificado si lo tienes
+                    "Email": "example@mailjet.com",  # Si no tienes dominio verificado
                     "Name": "ClickUp Bot"
                 },
                 "To": [
@@ -99,7 +99,7 @@ def send_email_with_attachment(filename):
                     {
                         "ContentType": "text/plain",
                         "Filename": filename,
-                        "Base64Content": contenido.encode("utf-8").decode("utf-8")
+                        "Base64Content": base64_content
                     }
                 ]
             }
@@ -107,6 +107,9 @@ def send_email_with_attachment(filename):
     }
 
     result = mailjet.send.create(data=data)
+    print(f"Mailjet response code: {result.status_code}")
+    print(f"Mailjet response body: {result.json()}")
+
     if result.status_code == 200:
         print("✅ Email enviado con Mailjet")
     else:
