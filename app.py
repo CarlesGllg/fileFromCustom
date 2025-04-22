@@ -5,6 +5,7 @@ from jinja2 import Template
 import smtplib
 from email.message import EmailMessage
 from mailjet_rest import Client
+import base64
 
 app = Flask(__name__)
 
