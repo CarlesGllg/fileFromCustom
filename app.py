@@ -27,6 +27,8 @@ MAILJET_API_KEY = os.environ.get("API_PUBLICA_MAILJET")
 MAILJET_API_SECRET = os.environ.get("API_SECRETA_MAILJET")
 
 GITHUB_TOKEN = os.environ.get("GITHUB_TOKEN")
+GITHUB_REPO_OWNER = os.environ.get("GITHUB_REPO_OWNER")
+GITHUB_REPO_NAME = os.environ.get("GITHUB_REPO_NAME")
 GITHUB_FILES = ["credentials.json", "token.json"]
 
 SCOPES = ['https://www.googleapis.com/auth/gmail.madify']
