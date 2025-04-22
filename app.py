@@ -31,8 +31,13 @@ def get_task_info(task_id):
     }
     url = f"https://api.clickup.com/api/v2/task/{task_id}"
     response = requests.get(url, headers=headers)
-    response.raise_for_status()
-    return response.json()
+    if response.result == 200:
+        print("Task = {task_id}.")
+        response.raise_for_status()
+        return response.json()
+    else:
+        print("No hi ha info de task.")
+        return null
 
 def generate_txt(task_data):
     with open("template.txt", "r", encoding="utf-8") as f:
