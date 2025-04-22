@@ -12,13 +12,15 @@ EMAIL_SENDER = "c360@robotix.es"
 EMAIL_PASSWORD = "Worc3st3r45+"
 EMAIL_RECIPIENT = "cgallego@robotix.es"
 
-@app.route('/webhook/<task_id>', methods=['POST'])
-def webhook(task_id):
-    print(f"Primer punto!!")
+@app.route('/webhook', methods=['POST'])
+def webhook():
+    # Extract task_id from URL query parameters
+    task_id = request.args.get('id')
+    
     if not task_id:
-        print(f"ERROR 1!!!")
-        return jsonify({"error": "No task_id in URL"}), 400
+        return "Task ID not provided", 400  # Respond with an error if no task_id is provided
 
+    print(f"Received task_id: {task_id}")
     print(f"✅ Webhook recibido para task_id: {task_id}")
 
     task_info = get_task_info(task_id)
@@ -28,18 +30,25 @@ def webhook(task_id):
     return jsonify({"status": "Email sent"})
 
 def get_task_info(task_id):
-    headers = {
-        "Authorization": CLICKUP_TOKEN
+
+    # Set the headers for the API request, including the Authorization token
+    HEADERS = {
+        'Authorization': CLICKUP_TOKEN
     }
-    url = f"https://api.clickup.com/api/v2/task/{task_id}"
-    response = requests.get(url, headers=headers)
-    if response.result == 200:
-        print("Task = {task_id}.")
-        response.raise_for_status()
-        return response.json()
+    url_global = f'https://api.clickup.com/api/v2/task/{task_id}'
+    response = requests.get(url_global, headers=HEADERS)
+    if response.status_code == 200:
+        # If the request was successful, parse the JSON response
+        task_data = response.json()
+        print(f"DADES_TASK: {task_data}")
+        custom_fields = task_data.get('custom_fields', [])
+    
+        #print("CUSTOM: ", custom_fields)
+    
+        return custom_fields
     else:
-        print("No hi ha info de task.")
         return null
+                   
 
 def generate_txt(task_data):
     with open("template.txt", "r", encoding="utf-8") as f:
