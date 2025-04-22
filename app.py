@@ -111,8 +111,13 @@ def write_secret_file(env_var_value, filename):
         content = base64.b64decode(env_var_value.encode('utf-8'))
         with open(filename, 'wb') as f:
             f.write(content)
+        print(f"✅ Archivo '{filename}' escrito correctamente.")
+    else:
+        print(f"❌ La variable de entorno para '{filename}' está vacía o no existe.")
 
 def authenticate_gmail_api():
+    print("CRED_FILE existe:", bool(CRED_FILE))
+    print("TOKEN_FILE existe:", bool(TOKEN_FILE))
     """Autenticarse con Gmail usando los secretos decodificados."""
     write_secret_file(CRED_FILE, "credentials.json")
     write_secret_file(TOKEN_FILE, "token.json")
