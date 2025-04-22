@@ -85,7 +85,7 @@ def send_email_with_attachment(filename):
         'Messages': [
             {
                 "From": {
-                    "Email": "example@mailjet.com",  # Si no tienes dominio verificado
+                    "Email": EMAIL_RECIPIENT,  # Si no tienes dominio verificado
                     "Name": "ClickUp Bot"
                 },
                 "To": [
