@@ -52,7 +52,7 @@ def webhook():
     generate_txt(task_info)
 
     # Asegurarse de tener credenciales locales descargadas
-    download_files_from_github()
+    # download_files_from_github()
 
     creds = authenticate_gmail_api()
     try:
