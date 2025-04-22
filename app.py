@@ -27,11 +27,9 @@ MAILJET_API_KEY = os.environ.get("API_PUBLICA_MAILJET")
 MAILJET_API_SECRET = os.environ.get("API_SECRETA_MAILJET")
 
 GITHUB_TOKEN = os.environ.get("GITHUB_TOKEN")
-GITHUB_REPO_OWNER = "cgallego@robotix.es"         # 🔁 Cambia por tu nombre de usuario de GitHub
-GITHUB_REPO_NAME = "myfiles"        # 🔁 Cambia por el nombre de tu repo privado
 GITHUB_FILES = ["credentials.json", "token.json"]
 
-SCOPES = ['https://www.googleapis.com/auth/gmail.send']
+SCOPES = ['https://www.googleapis.com/auth/gmail.madify']
 
 # =======================
 # ENDPOINT PRINCIPAL
