@@ -14,7 +14,9 @@ EMAIL_RECIPIENT = "cgallego@robotix.es"
 
 @app.route('/webhook/<task_id>', methods=['POST'])
 def webhook(task_id):
+    print(f"Primer punto!!")
     if not task_id:
+        print(f"ERROR 1!!!")
         return jsonify({"error": "No task_id in URL"}), 400
 
     print(f"✅ Webhook recibido para task_id: {task_id}")
