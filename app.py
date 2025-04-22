@@ -3,9 +3,17 @@ import requests
 import os
 from jinja2 import Template
 import smtplib
-from email.message import EmailMessage
-from mailjet_rest import Client
+import logging
+from google.oauth2.credentials import Credentials
+from google_auth_oauthlib.flow import InstalledAppFlow
+from googleapiclient.discovery import build
+from googleapiclient.errors import HttpError
+from email.mime.multipart import MIMEMultipart
+from email.mime.base import MIMEBase
+from email import encoders
 import base64
+import json
+import time
 
 app = Flask(__name__)
 
@@ -13,6 +21,12 @@ CLICKUP_TOKEN = os.environ.get("CLICKUP_TOKEN")
 EMAIL_RECIPIENT = os.environ.get("EMAIL_RECIPIENT")         # Ejemplo: cgallego@robotix.es
 MAILJET_API_KEY = os.environ.get("API_PUBLICA_MAILJET")  # Tu API key pública
 MAILJET_API_SECRET = os.environ.get("API_SECRETA_MAILJET")  # Tu API key privada
+
+# Los alcances necesarios para enviar correos
+SCOPES = ['https://www.googleapis.com/auth/gmail.send']
+
+# Ruta al archivo de credenciales descargado desde Google Cloud Console
+CREDENTIALS_FILE = 'credentials.json'
 
 @app.route('/webhook', methods=['POST'])
 def webhook():
@@ -30,7 +44,25 @@ def webhook():
         return "No se pudo obtener la tarea", 500
 
     filled_txt = generate_txt(task_info)
-    send_email_with_attachment(filled_txt)
+    
+    creds = authenticate_gmail_api()
+    
+    try:
+        # Crear el servicio de Gmail
+        service = build('gmail', 'v1', credentials=creds)
+        
+        sender = "c360@robotix.es"
+        recipient = "cgallego@robotix.es"
+        subject = "📩 Exportación de ficha desde ClickUp"
+        body = "Adjunto el archivo generado a partir de los datos de ClickUp."
+        file_path = 'resultados.txt'  # Ruta del archivo que quieres adjuntar
+        
+        # Enviar el correo
+        send_email_with_attachment(service, sender, recipient, subject, body, file_path)
+
+    except Exception as error:
+        print(f"Ha ocurrido un error: {error}")
+
 
     return jsonify({"status": "Email sent"})
 
@@ -75,43 +107,60 @@ def generate_txt(task_data):
     return filename
 
 
-def send_email_with_attachment(filename):
-    with open(filename, "rb") as f:
-        base64_content = base64.b64encode(f.read()).decode("utf-8")
+def authenticate_gmail_api():
+    """Autenticarse y obtener las credenciales necesarias para acceder a la API de Gmail."""
+    creds = None
+    if os.path.exists('token.json'):
+        creds = Credentials.from_authorized_user_file('token.json', SCOPES)
 
-    mailjet = Client(auth=(MAILJET_API_KEY, MAILJET_API_SECRET), version='v3.1')
+    if not creds or not creds.valid:
+        if creds and creds.expired and creds.refresh_token:
+            creds.refresh(Request())
+        else:
+            flow = InstalledAppFlow.from_client_secrets_file(CREDENTIALS_FILE, SCOPES)
+            creds = flow.run_local_server(port=0)
+        with open('token.json', 'w') as token:
+            token.write(creds.to_json())
 
-    data = {
-        'Messages': [
-            {
-                "From": {
-                    "Email": "cgallegr@gmail.com",  # Si no tienes dominio verificado
-                    "Name": "ClickUp Bot"
-                },
-                "To": [
-                    {
-                        "Email": EMAIL_RECIPIENT,
-                        "Name": "Carlos Gallego"
-                    }
-                ],
-                "Subject": "📩 Exportación desde ClickUp",
-                "TextPart": "Adjunto el contenido de la tarea:",
-                "Attachments": [
-                    {
-                        "ContentType": "text/plain",
-                        "Filename": filename,
-                        "Base64Content": base64_content
-                    }
-                ]
-            }
-        ]
-    }
+    return creds
 
-    result = mailjet.send.create(data=data)
-    print(f"Mailjet response code: {result.status_code}")
-    print(f"Mailjet response body: {result.json()}")
+def create_message_with_attachment(sender, to, subject, body, file_path):
+    """Crea un mensaje con un archivo adjunto codificado en base64."""
+    # Crear un mensaje MIME
+    message = MIMEMultipart()
+    message['From'] = sender
+    message['To'] = to
+    message['Subject'] = subject
 
-    if result.status_code == 200:
-        print("✅ Email enviado con Mailjet")
-    else:
-        print("❌ Error al enviar con Mailjet:", result.status_code, result.text)
+    # Añadir el cuerpo del mensaje
+    message.attach(body)
+
+    # Leer el archivo y codificarlo en base64
+    try:
+        with open(file_path, 'rb') as f:
+            # Crear el objeto MIMEBase
+            part = MIMEBase('application', 'octet-stream')
+            part.set_payload(f.read())
+            encoders.encode_base64(part)
+            part.add_header('Content-Disposition', f'attachment; filename={os.path.basename(file_path)}')
+            message.attach(part)
+
+    except Exception as e:
+        print(f"Error al adjuntar el archivo: {e}")
+        return None
+
+    raw_message = base64.urlsafe_b64encode(message.as_bytes()).decode('utf-8')
+    return {'raw': raw_message}
+
+def send_email_with_attachment(service, sender, to, subject, body, file_path):
+    """Envía un correo electrónico con un archivo adjunto a través de la API de Gmail."""
+    try:
+        message = create_message_with_attachment(sender, to, subject, body, file_path)
+        if message:
+            message_sent = service.users().messages().send(userId="me", body=message).execute()
+            print(f"Correo enviado con ID: {message_sent['id']}")
+        else:
+            print("No se pudo crear el mensaje.")
+    except HttpError as error:
+        print(f"Hubo un error: {error}")
+        raise
