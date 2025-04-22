@@ -1,0 +1,19 @@
+===================================
+   RESUMEN DE TAREA - CLICKUP
+===================================
+
+Nombre de la tarea: {{ Nombre_Tarea }}
+Cliente: {{ Cliente }}
+Responsable: {{ Responsable }}
+Fecha de entrega: {{ Fecha_de_entrega }}
+Prioridad: {{ Prioridad }}
+
+-----------------------------------
+Descripción del Proyecto:
+{{ Descripcion }}
+
+Notas Adicionales:
+{{ Notas }}
+
+===================================
+Fecha de generación: {{ Fecha_de_entrega }}
