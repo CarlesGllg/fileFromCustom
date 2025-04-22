@@ -22,7 +22,7 @@ jobs:
       # Paso 3: Clonar el repositorio privado con el token
       - name: Clone private repository
         run: |
-          git clone https://github.com/tu_usuario/tu_repositorio_privado.git private-repo
+          git clone https://github.com/CarlesGllg/myfiles.git private-repo
 
       # Paso 4: Copiar los archivos desde el repositorio privado
       - name: Copy credentials and token files
