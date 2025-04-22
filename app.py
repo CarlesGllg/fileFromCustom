@@ -105,25 +105,29 @@ def generate_txt(task_data):
 
     return filename
 
+def write_secret_file(env_var_value, filename):
+    """Escribe el contenido base64 de una variable de entorno en un archivo."""
+    if env_var_value:
+        content = base64.b64decode(env_var_value.encode('utf-8'))
+        with open(filename, 'wb') as f:
+            f.write(content)
 
 def authenticate_gmail_api():
-    """Autenticarse y obtener las credenciales necesarias para acceder a la API de Gmail."""
+    """Autenticarse con Gmail usando los secretos decodificados."""
+    write_secret_file(CRED_FILE, "credentials.json")
+    write_secret_file(TOKEN_FILE, "token.json")
+
     creds = None
+    if os.path.exists("token.json"):
+        creds = Credentials.from_authorized_user_file("token.json", SCOPES)
 
-    # Si ya existe un token guardado, lo cargamos
-    if os.path.exists(TOKEN_FILE):
-        creds = Credentials.from_authorized_user_file(TOKEN_FILE, SCOPES)
-
-    # Si no hay credenciales válidas, comenzamos el flujo de autorización
     if not creds or not creds.valid:
         if creds and creds.expired and creds.refresh_token:
             creds.refresh(Request())
         else:
-            flow = InstalledAppFlow.from_client_secrets_file(CREDENTIALS_FILE, SCOPES)
+            flow = InstalledAppFlow.from_client_secrets_file("credentials.json", SCOPES)
             creds = flow.run_local_server(port=0)
-        
-        # Guardar el token para futuras ejecuciones
-        with open(TOKEN_FILE, 'w') as token:
+        with open("token.json", 'w') as token:
             token.write(creds.to_json())
 
     return creds
