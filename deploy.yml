@@ -17,7 +17,7 @@ jobs:
       # Paso 2: Configurar el token de acceso personal para clonar el repositorio privado
       - name: Set up Git
         run: |
-          git config --global url."https://x-access-token:${{ secrets.GITHUB_TOKEN }}".insteadOf "https://github.com/"
+          git config --global url."https://x-access-token:${{ secrets.C360_TOKEN }}".insteadOf "https://github.com/"
       
       # Paso 3: Clonar el repositorio privado con el token
       - name: Clone private repository
