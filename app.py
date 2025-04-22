@@ -78,38 +78,35 @@ def send_email_with_attachment(filename):
     with open(filename, "r", encoding="utf-8") as f:
         contenido = f.read()
 
-    # Configura el cliente Mailjet
     mailjet = Client(auth=(MAILJET_API_KEY, MAILJET_API_SECRET), version='v3.1')
 
-    # Prepara el cuerpo del correo
     data = {
         'Messages': [
             {
                 "From": {
-                    "Email": "example@mailjet.com",  # Usamos el remitente predeterminado de Mailjet
-                    "Name": "ClickUp Informe"  # Nombre del remitente
+                    "Email": "example@mailjet.com",  # Reemplaza con remitente verificado si lo tienes
+                    "Name": "ClickUp Bot"
                 },
                 "To": [
                     {
                         "Email": EMAIL_RECIPIENT,
-                        "Name": "Carles Gallego"  # Nombre del destinatario
+                        "Name": "Carlos Gallego"
                     }
                 ],
-                "Subject": "📩 Exportación informe desde ClickUp",
+                "Subject": "📩 Exportación desde ClickUp",
                 "TextPart": "Adjunto el contenido de la tarea:",
                 "Attachments": [
                     {
                         "ContentType": "text/plain",
                         "Filename": filename,
-                        "Base64Content": contenido.encode("utf-8").decode("utf-8")  # Convierte el contenido a base64
+                        "Base64Content": contenido.encode("utf-8").decode("utf-8")
                     }
                 ]
             }
         ]
     }
 
-    # Envía el correo
-    result = mailjet.send(data=data)
+    result = mailjet.send.create(data=data)
     if result.status_code == 200:
         print("✅ Email enviado con Mailjet")
     else:
