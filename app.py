@@ -50,10 +50,6 @@ def webhook():
         return "No se pudo obtener la tarea", 500
 
     generate_txt(task_info)
-
-    # Asegurarse de tener credenciales locales descargadas
-    # download_files_from_github()
-
     creds = authenticate_gmail_api()
     try:
         service = build('gmail', 'v1', credentials=creds)
@@ -94,24 +90,6 @@ def generate_txt(task_data):
     output = template.render(**fields)
     with open("resultados.txt", "w", encoding="utf-8") as f:
         f.write(output)
-
-def download_files_from_github():
-    headers = {
-        "Authorization": f"token {GITHUB_TOKEN}",
-        "Accept": "application/vnd.github.v3.raw"
-    }
-
-    for filename in GITHUB_FILES:
-        url = f"https://api.github.com/repos/{GITHUB_REPO_OWNER}/{GITHUB_REPO_NAME}/contents/{filename}"
-        response = requests.get(url, headers=headers)
-
-        if response.status_code == 200:
-            content = base64.b64decode(response.json()["content"])
-            with open(filename, "wb") as f:
-                f.write(content)
-            print(f"✅ '{filename}' descargado correctamente.")
-        else:
-            print(f"❌ Error descargando '{filename}': {response.status_code} - {response.text}")
 
 def download_secret_file_from_github(filename, repo_owner, repo_name, github_token):
     """
