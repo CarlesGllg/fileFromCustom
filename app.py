@@ -2,8 +2,6 @@ from flask import Flask, request, jsonify
 import requests
 import os
 from jinja2 import Template
-import smtplib
-import logging
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
@@ -14,6 +12,7 @@ from email import encoders
 import base64
 import json
 import time
+import logging
 
 app = Flask(__name__)
 
@@ -25,8 +24,9 @@ MAILJET_API_SECRET = os.environ.get("API_SECRETA_MAILJET")  # Tu API key privada
 # Los alcances necesarios para enviar correos
 SCOPES = ['https://www.googleapis.com/auth/gmail.send']
 
-# Ruta al archivo de credenciales descargado desde Google Cloud Console
-CREDENTIALS_FILE = 'credentials.json'
+# Ruta a los archivos de credenciales y token desde las variables de entorno
+CREDENTIALS_FILE = os.getenv("CRED_FILE")  # Se espera que esté en una variable de entorno
+TOKEN_FILE = os.getenv("TOK_FILE")  # Se espera que esté en una variable de entorno
 
 @app.route('/webhook', methods=['POST'])
 def webhook():
@@ -52,7 +52,7 @@ def webhook():
         service = build('gmail', 'v1', credentials=creds)
         
         sender = "c360@robotix.es"
-        recipient = "cgallego@robotix.es"
+        recipient = EMAIL_RECIPIENT  # Este es el correo del destinatario
         subject = "📩 Exportación de ficha desde ClickUp"
         body = "Adjunto el archivo generado a partir de los datos de ClickUp."
         file_path = 'resultados.txt'  # Ruta del archivo que quieres adjuntar
@@ -62,7 +62,6 @@ def webhook():
 
     except Exception as error:
         print(f"Ha ocurrido un error: {error}")
-
 
     return jsonify({"status": "Email sent"})
 
@@ -110,19 +109,25 @@ def generate_txt(task_data):
 def authenticate_gmail_api():
     """Autenticarse y obtener las credenciales necesarias para acceder a la API de Gmail."""
     creds = None
-    if os.path.exists('token.json'):
-        creds = Credentials.from_authorized_user_file('token.json', SCOPES)
 
+    # Si ya existe un token guardado, lo cargamos
+    if os.path.exists(TOKEN_FILE):
+        creds = Credentials.from_authorized_user_file(TOKEN_FILE, SCOPES)
+
+    # Si no hay credenciales válidas, comenzamos el flujo de autorización
     if not creds or not creds.valid:
         if creds and creds.expired and creds.refresh_token:
             creds.refresh(Request())
         else:
             flow = InstalledAppFlow.from_client_secrets_file(CREDENTIALS_FILE, SCOPES)
             creds = flow.run_local_server(port=0)
-        with open('token.json', 'w') as token:
+        
+        # Guardar el token para futuras ejecuciones
+        with open(TOKEN_FILE, 'w') as token:
             token.write(creds.to_json())
 
     return creds
+
 
 def create_message_with_attachment(sender, to, subject, body, file_path):
     """Crea un mensaje con un archivo adjunto codificado en base64."""
@@ -151,6 +156,7 @@ def create_message_with_attachment(sender, to, subject, body, file_path):
 
     raw_message = base64.urlsafe_b64encode(message.as_bytes()).decode('utf-8')
     return {'raw': raw_message}
+
 
 def send_email_with_attachment(service, sender, to, subject, body, file_path):
     """Envía un correo electrónico con un archivo adjunto a través de la API de Gmail."""
