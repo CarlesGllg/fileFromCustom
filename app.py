@@ -25,7 +25,7 @@ MAILJET_API_SECRET = os.environ.get("API_SECRETA_MAILJET")  # Tu API key privada
 SCOPES = ['https://www.googleapis.com/auth/gmail.send']
 
 # Ruta a los archivos de credenciales y token desde las variables de entorno
-CREDENTIALS_FILE = os.getenv("CRED_FILE")  # Se espera que esté en una variable de entorno
+CRED_FILE = os.getenv("CRED_FILE")  # Se espera que esté en una variable de entorno
 TOKEN_FILE = os.getenv("TOK_FILE")  # Se espera que esté en una variable de entorno
 
 @app.route('/webhook', methods=['POST'])
