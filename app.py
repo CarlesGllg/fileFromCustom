@@ -31,7 +31,7 @@ GITHUB_REPO_OWNER = os.environ.get("GITHUB_REPO_OWNER")
 GITHUB_REPO_NAME = os.environ.get("GITHUB_REPO_NAME")
 GITHUB_FILES = ["credentials.json", "token.json"]
 
-SCOPES = ['https://www.googleapis.com/auth/gmail.madify']
+SCOPES = ['https://www.googleapis.com/auth/gmail.modify']
 
 # =======================
 # ENDPOINT PRINCIPAL
