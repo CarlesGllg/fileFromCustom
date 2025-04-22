@@ -1,0 +1,40 @@
+name: Deploy Application
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest  # O usa el sistema que prefieras
+
+    steps:
+      # Paso 1: Checkout del repositorio público
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # Paso 2: Configurar el token de acceso personal para clonar el repositorio privado
+      - name: Set up Git
+        run: |
+          git config --global url."https://x-access-token:${{ secrets.GITHUB_TOKEN }}".insteadOf "https://github.com/"
+      
+      # Paso 3: Clonar el repositorio privado con el token
+      - name: Clone private repository
+        run: |
+          git clone https://github.com/tu_usuario/tu_repositorio_privado.git private-repo
+
+      # Paso 4: Copiar los archivos desde el repositorio privado
+      - name: Copy credentials and token files
+        run: |
+          cp private-repo/credentials.json ./credentials.json
+          cp private-repo/token.json ./token.json
+
+      # Paso 5: Instalar dependencias y ejecutar tu aplicación
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+
+      - name: Run application
+        run: |
+          python app.py
