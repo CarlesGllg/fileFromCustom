@@ -2,113 +2,61 @@
    {{ Nombre_Escuela }}
 ===================================
 
-- Código de cliente: {{Codigo_Cliente}}  'ROB: Codi Client'
-- Responsable del centro: {{Resp_Centro}}  'ROB: Responsable Centre'
-- Teléfono responsable centro: {{Tel_Resp_Centro}}  'ROB: Telef. Resp.Centro'
-- Email responsable centro: {{Email_Resp_Centro}}  'ROB: Email Responsable'
+- Código de cliente: {{Codigo_Cliente}} 
+- Responsable del centro: {{Resp_Centro}}  
+- Teléfono responsable centro: {{Tel_Resp_Centro}} 
+- Email responsable centro: {{Email_Resp_Centro}} 
 
-- Director del centro: {{Director_Centro}} 'ROB: Director Centro'
-- Email director del centro: {{Email_Director_Centro}}  'ROB: email Director Centro'
+- Director del centro: {{Director_Centro}}
+- Email director del centro: {{Email_Director_Centro}}  
 
-- Dirección del centro: {{Direccion_Centro}} 'ROB: Dirección Centro'
-- Otros correos de contacto: {{ Otros_Correos }} 'ROB: Altres emails contacte'
+- Dirección del centro: {{Direccion_Centro}} 
+- Otros correos de contacto: {{ Otros_Correos }}
 
-- AP Responsable: {{ AP_Responsable }}  'ROB: AP' (drop)
-- PM Responsable: {{ PM_Responsable }}  'ROB: PM' (drop)
-- Comercial Responsable: {{ Comercial_Responsable }}  'ROB: Comercial'
+- AP Responsable: {{ AP_Responsable }} 
+- PM Responsable: {{ PM_Responsable }}  
+- Comercial Responsable: {{ Comercial_Responsable }}
 
 -----------------------------------
 DATOS DE LA ESCUELA:
 
-- Número de estudiantes: {{ Num_Estudiantes }} 'ROB: Students'
-- Enseñanzas: {{ Ensenyaments }} 'ROB: Ensenyaments' (drop)
-- Número de grupos: {{ Num_Grups }} 'ROB: Groups'
-- Eventualidad: {{ Eventualidad }} 'ROB: Eventualidad' (drop)
-- Idioma del contenido: {{ Idioma_Contenido }}  'ROB: Idioma Contenido' (drop)
-- Tipos de dispositivos: {{ Tipos_Dispositivos }} 'ROB: Tipos de Dispositivos'
-- Tipo de acceso a plataforma: {{ Tipo_Acceso }} 'ROB: Tipo de Acceso Plataforma' (drop)
-- Status en ClickUp: {{ Status_Escuela }} 'ROB: STATUS_Escola'
+- Número de estudiantes: {{ Num_Estudiantes }} 
+- Enseñanzas: {{ Ensenyaments }}
+- Número de grupos: {{ Num_Grups }}
+- Eventualidad: {{ Eventualidad }} 
+- Idioma del contenido: {{ Idioma_Contenido }} 
+- Tipos de dispositivos: {{ Tipos_Dispositivos }}
+- Tipo de acceso a plataforma: {{ Tipo_Acceso }}
+- Status en ClickUp: {{ Status_Escuela }} 
 
 
 * Robots CR:
-- Numero de CR: {{ Numero_CR }} 'ROB: Robots CR'
-- Ratio CR: {{ Ratio_CR }} 'ROB: Ratio Robots CR' (drop)
+- Numero de CR: {{ Numero_CR }} 
+- Ratio CR: {{ Ratio_CR }} 
 
 * Robots SP:
-- Numero de SP: {{ Numero_SP }} 'ROB: Robots SP'
-- Ratio SP: {{ Ratio_SP }} 'ROB: Ratio Robots SP' (drop)
+- Numero de SP: {{ Numero_SP }} 
+- Ratio SP: {{ Ratio_SP }} 
 
 * Adicionales:
-- Recursos adicionales: {{ Recursos_Adicionales }} 'ROB: Rec Addicionals'
-- Rotación de material: {{ Rotacion_Material }} 'ROB: Rotació Material' (drop)
+- Recursos adicionales: {{ Recursos_Adicionales }} 
+- Rotación de material: {{ Rotacion_Material }}
 
 * Cortadora:
-- xTool M1: {{ XTool_M1 }} 'ROB: TALLADORA 4.0 xTool m1'
-
+- xTool M1: {{ XTool_M1 }} 
 
 -----------------------------------
 DATOS DEL CONTRATO:
 
-- Curso inicial: {{ Curso_Inicial}}  'ROB: Curs Inicial' (drop)
-- Tipo de convenio: {{ Tipo_Convenio }}  'ROB: Tipus conveni' (drop)
-- Último convenio firmado: {{ Ultimo_Convenio }}  'ROB: Último Convenio' (drop)
-- Vencimiento del convenio: {{Vencimiento_Convenio}}  'ROB: FI CONVENI' (drop)
+- Curso inicial: {{ Curso_Inicial}} 
+- Tipo de convenio: {{ Tipo_Convenio }}  
+- Último convenio firmado: {{ Ultimo_Convenio }}
+- Vencimiento del convenio: {{Vencimiento_Convenio}} 
 
 -----------------------------------
 Comentarios:  
 
-{{ Comentarios }} 'Comentarios'
+{{ Comentarios }} 
 
 ===================================
 Fecha: {{ Fecha_Informe }}
-
-
-
-
-
-DROP AÑADIDOS:
-
-'name': 'ROB: PM', 'type': 'drop_down', 'type_config': {'new_drop_down': True, 'options': [{'id': '55e1adab-e055-4c71-8b6f-31556bbce3e8', 'name': 'EM', 'color': '#e50000', 'orderindex': 0}, {'id': '0e4c8266-1311-4529-a41d-cd80b8067e3e', 'name': 'BM', 'color': '#f9d900', 'orderindex': 1}, {'id': '4dd25f57-ea62-4d48-9971-e92b3475f313', 'name': 'DP', 'color': '#800000', 'orderindex': 2}, {'id': '03e3b765-4b87-4b7f-bec8-b6a2ba0049ad', 'name': 'JI', 'color': '#04A9F4', 'orderindex': 3}, {'id': '01fe218c-202d-41a6-b803-d33be08e1b0e', 'name': 'LF', 'color': '#b5bcc2', 'orderindex': 4}, {'id': 'a912e13b-6921-4f6d-b23a-11d4fa1cb3e8', 'name': 'Altre', 'color': '#fff', 'orderindex': 5}]}, 'date_created': '1714133614577', 'hide_from_guests': True, 'value': 4
-'name': 'ROB: AP', 'type': 'drop_down', 'type_config': {'sorting': 'manual', 'new_drop_down': True, 'options': [{'id': '9a52b3cb-a6de-40a3-b19a-26bb526e8aba', 'name': 'MR', 'color': '#f9d900', 'orderindex': 0}, {'id': '4fa2ceb3-aa74-48db-8367-b08d3f729bd5', 'name': 'DP', 'color': '#bf55ec', 'orderindex': 1}, {'id': '1b90c7bb-c252-4189-9a2f-03a173e89a7c', 'name': 'EC', 'color': '#FF4081', 'orderindex': 2}, {'id': '5574f26c-cd20-43cb-9563-99fcc3b60d66', 'name': 'SV', 'color': '#04A9F4', 'orderindex': 3}, {'id': 'eeaceefa-c08e-41fd-bbd5-6d6787f668a4', 'name': 'ECM', 'color': '#2ecd6f', 'orderindex': 4}, {'id': '6fdc2415-6bcb-43e1-9a37-5091e0c29416', 'name': 'CR', 'color': '#b5bcc2', 'orderindex': 5}, {'id': 'e2e628ea-9ec8-4bf6-9442-cc4839ab2f34', 'name': 'Altre', 'color': '#ff7800', 'orderindex': 6}, {'id': '7b4c24db-9aa1-4fda-a13a-88dd25498189', 'name': 'JP', 'color': '#0231E8', 'orderindex': 7}, {'id': '7891121a-918e-4e16-ac90-0f62f850686c', 'name': 'AS', 'color': '#AF7E2E', 'orderindex': 8}]}, 'date_created': '1714134769586', 'hide_from_guests': False, 'value': 1
-'name': 'ROB: FI CONVENI', 'type': 'drop_down', 'type_config': {'sorting': 'manual', 'options': [{'id': '9fc058de-473e-4627-bb7b-c2e53cd84a1e', 'name': '24/25', 'color': '#e50000', 'orderindex': 0}, {'id': '5afe4ef8-90c8-4596-9b20-8469f3cc5e50', 'name': '25/26', 'color': '#ff7800', 'orderindex': 1}, {'id': '14afdd75-1142-4cb8-9485-7da5c38eae12', 'name': '26/27', 'color': '#f9d900', 'orderindex': 2}, {'id': '6d06e435-3cab-468b-b8d4-37a354d34400', 'name': '27/28', 'color': '#04A9F4', 'orderindex': 3}, {'id': 'ffc5ccb8-e8e4-4610-aea0-423dd7aeef30', 'name': '28/29', 'color': '#2ecd6f', 'orderindex': 4}, {'id': '99892d4c-6706-4b14-942c-81053940ba83', 'name': '29/30', 'color': '#FF7FAB', 'orderindex': 5}, {'id': '3c167a70-0aed-44eb-8756-cd6998bf394a', 'name': '30/31', 'color': '#AF7E2E', 'orderindex': 6}, {'id': 'c1669373-b424-4593-9aca-98aa4ebe3906', 'name': '31/32', 'color': '#7C4DFF', 'orderindex': 7}, {'id': 'a8ed2eec-0566-40cc-a5b1-5f0257e29061', 'name': '32/33', 'color': '#1bbc9c', 'orderindex': 8}]},
-'name': 'ROB: Curs Inicial', 'type': 'drop_down', 'type_config': {'sorting': 'manual', 'new_drop_down': True, 'options': [{'id': '5e3c3abd-1f55-456c-8e1f-8de025670bb2', 'name': '21/22', 'color': '#9b59b6', 'orderindex': 0}, {'id': 'abbba7d4-d3ae-4a9d-8eee-04c0e33b3c09', 'name': '22/23', 'color': '#ff7800', 'orderindex': 1}, {'id': '06ba631a-e9de-4a00-92cb-13f34592b8bc', 'name': '23/24', 'color': '#f9d900', 'orderindex': 2}, {'id': '01637609-ccef-4f68-89bb-f069df5d5030', 'name': '24/25', 'color': '#2ecd6f', 'orderindex': 3}, {'id': 'a5fdd3ec-f7aa-484a-a550-8f33433f97d6', 'name': '25/26', 'color': '#0231E8', 'orderindex': 4}]}, 'date_created': '1717421905819', 'hide_from_guests': False, 'value': 0
-'name': 'ROB: Último Convenio', 'type': 'drop_down', 'type_config': {'sorting': 'manual', 'new_drop_down': True, 'options': [{'id': '3ecca4b5-6412-44f4-845c-953eec834793', 'name': '21/22', 'color': '#9b59b6', 'orderindex': 0}, {'id': '5fc5b7ff-cece-437f-a6a8-a3860b559996', 'name': '22/23', 'color': '#ff7800', 'orderindex': 1}, {'id': '2d19f70d-ac38-49c2-954a-f6853988318a', 'name': '23/24', 'color': '#f9d900', 'orderindex': 2}, {'id': 'c589a153-5850-43ce-ac58-64b6cec4eec8', 'name': '24/25', 'color': '#2ecd6f', 'orderindex': 3}, {'id': '7f73b5ab-820b-4cb1-9f6c-156711574ef8', 'name': '25/26', 'color': '#0231E8', 'orderindex': 4}]}, 'date_created': '1718092772732', 'hide_from_guests': False, 'value': 0
-'name': 'ROB: Idioma Contenido', 'type': 'drop_down', 'type_config': {'options': [{'id': '8aa5416e-72ed-4b9c-b4d0-5f5c8c41c4db', 'name': 'ES', 'color': '#81B1FF', 'orderindex': 0}, {'id': 'fe6d0b04-4256-4085-8cc1-0e8b729156db', 'name': 'CA', 'color': '#1bbc9c', 'orderindex': 1}, {'id': 'ea125b28-6c3c-4ae1-be48-72b1fc9cdd2e', 'name': 'EN', 'color': '#ff7800', 'orderindex': 2}, {'id': 'def4bb03-460c-467d-9a54-38e7bfa2e70c', 'name': 'EU', 'color': '#EA80FC', 'orderindex': 3}, {'id': 'd18907c7-943a-43bd-a4e2-3c2a105e672d', 'name': 'Otro', 'color': '#667684', 'orderindex': 4}]}, 'date_created': '1718012669998', 'hide_from_guests': False, 'value': 0
-'name': 'ROB: Ensenyaments', 'type': 'drop_down', 'type_config': {'new_drop_down': True, 'options': [{'id': '0b01898c-eaeb-40e8-8bc3-0a9a28adb6d5', 'name': 'PRI', 'color': '#f9d900', 'orderindex': 0}, {'id': '546927f9-473f-4b3d-9e92-98f9506abadb', 'name': 'SEC', 'color': '#E65100', 'orderindex': 1}, {'id': '00f17f48-92ea-4e1c-9a4a-23f04c424e25', 'name': 'PRI - SEC', 'color': '#ff7800', 'orderindex': 2}, {'id': '36f3360b-7101-40eb-a48e-c09b7e03b001', 'name': 'INF - PRI', 'color': '#81B1FF', 'orderindex': 3}, {'id': 'b40329ee-3c4e-4834-8029-b63c8d1464b0', 'name': 'BAT', 'color': '#e50000', 'orderindex': 4}, {'id': '3fa03603-7b78-4c34-b74d-d27ffcba5f49', 'name': 'INF - PRI - SEC', 'color': '#0231E8', 'orderindex': 5}, {'id': 'ba23b0b0-295d-4cf1-beef-72e0932ff1bd', 'name': 'INF - SEC', 'color': '#667684', 'orderindex': 6}]}, 'date_created': '1716902874362', 'hide_from_guests': True, 'value': 1
-'name': 'ROB: Eventualidad', 'type': 'drop_down', 'type_config': {'sorting': 'manual', 'options': [{'id': '10e7dd73-5916-43dd-b619-53c2c99d5302', 'name': 'Anual', 'color': '#81B1FF', 'orderindex': 0}, {'id': 'a7b0a741-c5e9-4487-9561-589fa598dade', 'name': 'Semestral', 'color': '#1bbc9c', 'orderindex': 1}, {'id': 'b9687841-c7c9-4e27-aa16-d9da0bbc5dad', 'name': 'Trimestral', 'color': '#ff7800', 'orderindex': 2}, {'id': '0558490a-a5b5-4bb2-8b71-f1471362aa06', 'name': 'Otros (Según curso)', 'color': '#667684', 'orderindex': 3}]}, 'date_created': '1718012301280', 'hide_from_guests': False, 'value': 0
-'name': 'ROB: Ratio Robots CR', 'type': 'drop_down', 'type_config': {'new_drop_down': True, 'options': [{'id': 'b3740324-7a4d-4d7e-b431-111984ac889f', 'name': 'R2', 'color': '#81B1FF', 'orderindex': 0}, {'id': '31491799-ea54-4cdb-a192-4a6cde80843a', 'name': 'R3', 'color': '#3082B7', 'orderindex': 1}, {'id': 'af799d18-51c4-438a-bf96-2d1e2ac4e9a3', 'name': 'R4', 'color': '#0231E8', 'orderindex': 2}, {'id': 'faf3c5f6-17d9-41be-8c5f-5a88201415ad', 'name': 'SR', 'color': None, 'orderindex': 3}, {'id': '812fe30c-1524-4062-9de1-382e7afcf18e', 'name': 'ONE', 'color': '#04A9F4', 'orderindex': 4}]}, 'date_created': '1716903083118', 'hide_from_guests': False, 'required': False}
-'name': 'ROB: Ratio Robots SP', 'type': 'drop_down', 'type_config': {'sorting': 'manual', 'new_drop_down': True, 'options': [{'id': '11635458-a119-4f11-9d57-1cb2bde2861d', 'name': 'R2', 'color': '#81B1FF', 'orderindex': 0}, {'id': '12c652ac-cdb4-47c0-9c55-e9eada04777e', 'name': 'R3', 'color': '#3082B7', 'orderindex': 1}, {'id': '34a0935a-96e8-4f08-be19-035133a84efb', 'name': 'R4', 'color': '#0231E8', 'orderindex': 2}, {'id': '58494fae-9372-4219-81f5-0fee30fa1859', 'name': 'SR', 'color': None, 'orderindex': 3}, {'id': '9a6572c7-daad-4c4a-a4aa-ff6f993ae46a', 'name': 'ONE', 'color': '#04A9F4', 'orderindex': 4}, {'id': 'eac42d75-ab78-465f-b5ab-b1be939af512', 'name': 'mBOT2', 'color': None, 'orderindex': 5}]}, 'date_created': '1718014803902', 'hide_from_guests': False, 'value': 2
-'name': 'ROB: Tipo de Acceso Plataforma', 'type': 'drop_down', 'type_config': {'options': [{'id': 'd4fd75f4-1cb5-469a-800c-8ede3e4c2c26', 'name': 'Google', 'color': '#81B1FF', 'orderindex': 0}, {'id': '8a50cdbc-7a91-4d52-82d2-e617e3713e31', 'name': 'Microsoft', 'color': '#e50000', 'orderindex': 1}, {'id': '1f1225ae-8c5a-4d90-8cd5-cf6cbe47bb9e', 'name': 'Otros', 'color': '#667684', 'orderindex': 2}]}, 'date_created': '1718012237186', 'hide_from_guests': False, 'value': 0
-'name': 'ROB: Tipus conveni', 'type': 'drop_down', 'type_config': {'sorting': 'manual', 'options': [{'id': 'abadc5fb-d483-4fe1-8b5f-c3a008a8d458', 'name': 'SR', 'color': '#f9d900', 'orderindex': 0}, {'id': '0d853138-2887-4863-ae8b-2d5a6e2c420b', 'name': 'RATIO', 'color': '#81B1FF', 'orderindex': 1}, {'id': '74906cd9-8844-4641-8abc-9ad21987b5cf', 'name': 'SR + RATIO', 'color': '#AF7E2E', 'orderindex': 2}, {'id': '9fa23a4f-865c-406b-8425-468932757234', 'name': 'DUBTE', 'color': '#ff7800', 'orderindex': 3}]}, 'date_created': '1725271115491', 'hide_from_guests': False, 'value': 0
-'name': 'ROB: Rotació Material', 'type': 'drop_down', 'type_config': {'sorting': 'manual', 'new_drop_down': True, 'options': [{'id': '4b5f41a6-ad0b-4e67-b271-ea9da240162f', 'name': 'SÍ', 'color': '#e50000', 'orderindex': 0}, {'id': '82cbc14f-ddd1-4e1e-9810-61f6ba3969a3', 'name': 'NO', 'color': '#81B1FF', 'orderindex': 1}, {'id': '905bd351-16ca-45ef-bbca-3f52c2577361', 'name': 'NS/NC (SR)', 'color': '#f9d900', 'orderindex': 2}]}
-
-
-
-
-NO AÑADIDOS:
-
-'name': 'STATUS: Bloqueada'
-'name': 'STATUS: Activa'
-'name': 'STATUS: Data Nueva Escuela'
-'name': 'STATUS: Entre Cursos'
-'name': 'STATUS: Configuracion'
-'name': 'STATUS: Finalizada'
-'name': 'STATUS: Usuarios OK'
-'name': 'STATUS: En Riesgo'
-'name': 'TicketNum'
-'name': 'ROB: Inactiva'
-'name': 'ROB: Update Grup', 'type': 'drop_down', 'type_config': {'sorting': 'manual', 'new_drop_down': True, 'options': [{'id': '09420c35-36f6-4cb5-90e7-194687f11f40', 'name': 'ACTIU', 'color': '#1bbc9c', 'orderindex': 0}, {'id': '70c1f291-78db-4c6a-b374-cefd803632f3', 'name': 'Problemes Tècnics', 'color': '#3082B7', 'orderindex': 1}, {'id': '5d1e89bc-0847-45d9-b78e-71f1f1b441f5', 'name': 'Ghosting', 'color': '#e50000', 'orderindex': 2}, {'id': 'd6c337c5-a7ad-4665-ac73-b75f001dbb59', 'name': 'T2/T3', 'color': '#f9d900', 'orderindex': 3}, {'id': 'd7909734-b7e6-46f5-beaa-b6212267e2da', 'name': 'Altres', 'color': '#b5bcc2', 'orderindex': 4}, {'id': '6cc7f66c-d535-4160-b23c-2111c4db90fe', 'name': 'FIN_PARCIAL', 'color': '#FF7FAB', 'orderindex': 5}, {'id': 'ebb21987-b24a-4521-8cd3-632902b85c6b', 'name': 'FINALIZADO/CANCELADO', 'color': '#e50000', 'orderindex': 6}]}
-'name': 'ROB: PipeDrive OrgID'
-'name': 'ROB: Google Maps'
-'name': 'ROB: Darrer Canvi Status'
-'name': 'ROB: AP VISITADOR', 'type': 'drop_down', 'type_config': {'sorting': 'manual', 'new_drop_down': True, 'options': [{'id': '5f34d72a-6c4f-475f-8471-dd3b2336191d', 'name': 'MR', 'color': '#f9d900', 'orderindex': 0}, {'id': 'f087e2fb-2ead-41f2-8848-030089e56beb', 'name': 'DP', 'color': '#bf55ec', 'orderindex': 1}, {'id': '08d5ecd2-cd59-4a88-8229-c62303491917', 'name': 'EC', 'color': '#FF4081', 'orderindex': 2}, {'id': '9018bbbc-443f-46a8-80e0-fa56c442b100', 'name': 'SV', 'color': '#04A9F4', 'orderindex': 3}, {'id': '4fcd7600-a531-44d6-84d3-3230a728a188', 'name': 'ECM', 'color': '#2ecd6f', 'orderindex': 4}, {'id': '36f504a4-7ba3-4b10-b509-1db33fc555cc', 'name': 'CR', 'color': '#b5bcc2', 'orderindex': 5}, {'id': '990b4a70-7b40-418e-828c-2f5ac98505d9', 'name': 'Altre', 'color': '#ff7800', 'orderindex': 6}, {'id': 'b0b70e6e-d979-4bec-adb0-925f4efbff00', 'name': 'JP', 'color': '#0231E8', 'orderindex': 7}, {'id': '59d2f9bf-a3ed-4f2c-83ae-a7c6f0360f4a', 'name': 'AS', 'color': '#AF7E2E', 'orderindex': 8}]}, 'date_created': '1734346122445', 'hide_from_guests': False, 'value': 1
-'name': 'ROB: Datos Alumnado-Profesorado (Link)'
-'name': 'ROB: Valoració'
-'name': 'ROB: Conveni'
-'ROB: Tipus', 'type': 'drop_down', 'type_config': {'options': [{'id': '52c2813b-47d0-4c62-a8aa-b4f89afb53fc', 'name': 'C360', 'color': None, 'orderindex': 0}, {'id': 'bc571681-b926-4394-8766-11c25f086687', 'name': 'C360MINI', 'color': None, 'orderindex': 1}, {'id': 'f7cbcea0-8b46-48cc-8128-f199a28843ed', 'name': 'PILOT', 'color': None, 'orderindex': 2}, {'id': '08e65f30-cd8e-46f6-aac3-5b92133f22d0', 'name': 'C360EE', 'color': None, 'orderindex': 3}, {'id': '72e459fa-d547-42b4-a876-cc0ac90936bf', 'name': 'C360+', 'color': '#f900ea', 'orderindex': 4}, {'id': 'bda7af8a-d173-4eb7-bd4a-d7e331625fa3', 'name': 'C360 mBot2', 'color': None, 'orderindex': 5}, {'id': 'e88ea041-2acb-4a28-a00a-70a1754c9d6a', 'name': 'C360as', 'color': None, 'orderindex': 6}, {'id': 'f4be3f92-a3ae-43db-a481-bb391be9251f', 'name': 'C360rsc', 'color': None, 'orderindex': 7}]}, 'date_created': '1716904355904', 'hide_from_guests': False, 'value': 0
-'name': 'ROB: Asistentes RI'
-'name': 'ROB: 1er Contacte fet'
-'name': 'ROB: Data Inici'
-'name': 'ROB: Responsable Grup'
-'name': 'ROB: email Resp. Grup'
-'name': 'Reclamció llistats'
