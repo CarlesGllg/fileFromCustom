@@ -194,6 +194,40 @@ def download_secret_file_from_github(filename, repo_owner, repo_name, github_tok
         print(f"❌ Error descargando '{filename}': {response.status_code} - {response.text}")
         raise FileNotFoundError(f"No se pudo descargar '{filename}' desde GitHub.")
 
+# Función para desmarcar el custom field 'ROB: Generar Informe'
+def uncheck_custom_field(custom_fields, custom_field_name):
+    # Buscar el custom field por nombre
+    for field in custom_fields:
+        if field.get('name') == custom_field_name:
+            custom_field_id = field.get('id')
+            break
+
+    if not custom_field_id:
+        print(f"❌ No se encontró el campo personalizado {custom_field_name} en la tarea.")
+        return
+
+    # Ahora, realizar una solicitud para actualizar el custom field
+    url = f'https://api.clickup.com/api/v2/task/{task_id}/custom/{custom_field_id}'
+    headers = {
+        'Authorization': CLICKUP_TOKEN
+    }
+
+    data = {
+        "custom_fields": [
+            {
+                "id": custom_field_id,
+                "value": False  # Desmarcar el checkbox
+            }
+        ]
+    }
+
+    response = requests.put(url, headers=headers, json=data)
+    if response.status_code == 200:
+        print(f"✅ El campo personalizado {custom_field_name} ha sido desmarcado correctamente en la tarea {task_id}.")
+    else:
+        print(f"❌ Error al actualizar el campo personalizado: {response.text}")
+
+
 def authenticate_gmail_api():
     repo_owner = os.getenv("GITHUB_REPO_OWNER")
     repo_name = os.getenv("GITHUB_REPO_NAME")
