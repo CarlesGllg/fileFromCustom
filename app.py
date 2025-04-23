@@ -33,11 +33,16 @@ GITHUB_FILES = ["credentials.json", "token.json"]
 
 SCOPES = ['https://www.googleapis.com/auth/gmail.modify']
 
-selected_custom = ["ROB: Codi Client","ROB: Responsable Centre","ROB: Telef. Resp.Centro", "ROB: Email Responsable", "ROB: Director Centro", "ROB: email Director Centro",
-                  "ROB: Dirección Centro", "ROB: Altres emails contacte", "ROB: AP", "ROB: PM", "ROB: Comercial", "ROB: Students", "ROB: Ensenyaments","ROB: Groups",
-                  "ROB: Eventualidad", "ROB: Idioma Contenido", "ROB: Tipos de Dispositivos", "ROB: Tipo de Acceso Plataforma", "ROB: STATUS_Escola", "ROB: Robots CR",
-                  "ROB: Ratio Robots CR", "ROB: Robots SP", "ROB: Ratio Robots SP", "ROB: Rec Addicionals", "ROB: Rotació Material", "ROB: TALLADORA 4.0 xTool m1",
-                  "ROB: Curs Inicial", "ROB: Tipus conveni", "ROB: Último Convenio", "ROB: FI CONVENI", "Comentarios"]
+selected_custom = ["ROB: Nom Escola":"Nombre_Escuela", "ROB: Codi Client":"Codigo_Cliente", "ROB: Responsable Centre":"Resp_Centro", "ROB: Telef. Resp.Centro":"Tel_Resp_Centro", 
+                  "ROB: Email Responsable":"Email_Resp_Centro", "ROB: Director Centro":"Director_Centro", "ROB: email Director Centro":"Email_Director_Centro", "ROB: Dirección Centro":"Direccion_Centro",
+                  "ROB: Altres emails contacte":"Otros_Correos", "ROB: AP":"AP_Responsable", "ROB: PM":"PM_Responsable", "ROB: Comercial":"Comercial_Responsable", 
+                  "ROB: Students":"Num_Estudiantes", "ROB: Ensenyaments":"Ensenyaments", "ROB: Groups":"Num_Grups", "ROB: Eventualidad":"Eventualidad", "ROB: Idioma Contenido":"Idioma_Contenido",
+                  "ROB: Tipos de Dispositivos":"Tipos_Dispositivos", "ROB: Tipo de Acceso Plataforma":"Tipo_Acceso", "ROB: STATUS_Escola":"Status_Escuela", "ROB: Robots CR":"Numero_CR",
+                  "ROB: Ratio Robots CR":"Ratio_CR", "ROB: Robots SP":"Numero_SP", "ROB: Ratio Robots SP":"Ratio_SP", "ROB: Rec Addicionals":"Recursos_Adicionales", "ROB: Rotació Material":"Rotacion_Material",
+                  "ROB: TALLADORA 4.0 xTool m1":"XTool_M1", "ROB: Curs Inicial":"Curso_Inicial", "ROB: Tipus conveni":"Tipo_Convenio", "ROB: Último Convenio":"Ultimo_Convenio",
+                  "ROB: FI CONVENI":"Vencimiento_Convenio", "Comentarios":"Comentarios"]
+
+
 
 # =======================
 # ENDPOINT PRINCIPAL
