@@ -33,21 +33,45 @@ GITHUB_FILES = ["credentials.json", "token.json"]
 
 SCOPES = ['https://www.googleapis.com/auth/gmail.modify']
 
-selected_custom = ["ROB: Nom Escola":"Nombre_Escuela", "ROB: Codi Client":"Codigo_Cliente", "ROB: Responsable Centre":"Resp_Centro", "ROB: Telef. Resp.Centro":"Tel_Resp_Centro", 
-                  "ROB: Email Responsable":"Email_Resp_Centro", "ROB: Director Centro":"Director_Centro", "ROB: email Director Centro":"Email_Director_Centro", "ROB: Dirección Centro":"Direccion_Centro",
-                  "ROB: Altres emails contacte":"Otros_Correos", "ROB: AP":"AP_Responsable", "ROB: PM":"PM_Responsable", "ROB: Comercial":"Comercial_Responsable", 
-                  "ROB: Students":"Num_Estudiantes", "ROB: Ensenyaments":"Ensenyaments", "ROB: Groups":"Num_Grups", "ROB: Eventualidad":"Eventualidad", "ROB: Idioma Contenido":"Idioma_Contenido",
-                  "ROB: Tipos de Dispositivos":"Tipos_Dispositivos", "ROB: Tipo de Acceso Plataforma":"Tipo_Acceso", "ROB: STATUS_Escola":"Status_Escuela", "ROB: Robots CR":"Numero_CR",
-                  "ROB: Ratio Robots CR":"Ratio_CR", "ROB: Robots SP":"Numero_SP", "ROB: Ratio Robots SP":"Ratio_SP", "ROB: Rec Addicionals":"Recursos_Adicionales", "ROB: Rotació Material":"Rotacion_Material",
-                  "ROB: TALLADORA 4.0 xTool m1":"XTool_M1", "ROB: Curs Inicial":"Curso_Inicial", "ROB: Tipus conveni":"Tipo_Convenio", "ROB: Último Convenio":"Ultimo_Convenio",
-                  "ROB: FI CONVENI":"Vencimiento_Convenio", "Comentarios":"Comentarios"]
-
-
+# Diccionario de campos personalizados
+selected_custom = {
+    "ROB: Nom Escola": "Nombre_Escuela", 
+    "ROB: Codi Client": "Codigo_Cliente", 
+    "ROB: Responsable Centre": "Resp_Centro", 
+    "ROB: Telef. Resp.Centro": "Tel_Resp_Centro", 
+    "ROB: Email Responsable": "Email_Resp_Centro", 
+    "ROB: Director Centro": "Director_Centro", 
+    "ROB: email Director Centro": "Email_Director_Centro", 
+    "ROB: Dirección Centro": "Direccion_Centro",
+    "ROB: Altres emails contacte": "Otros_Correos", 
+    "ROB: AP": "AP_Responsable", 
+    "ROB: PM": "PM_Responsable", 
+    "ROB: Comercial": "Comercial_Responsable", 
+    "ROB: Students": "Num_Estudiantes", 
+    "ROB: Ensenyaments": "Ensenyaments", 
+    "ROB: Groups": "Num_Grups", 
+    "ROB: Eventualidad": "Eventualidad", 
+    "ROB: Idioma Contenido": "Idioma_Contenido",
+    "ROB: Tipos de Dispositivos": "Tipos_Dispositivos", 
+    "ROB: Tipo de Acceso Plataforma": "Tipo_Acceso", 
+    "ROB: STATUS_Escola": "Status_Escuela", 
+    "ROB: Robots CR": "Numero_CR",
+    "ROB: Ratio Robots CR": "Ratio_CR", 
+    "ROB: Robots SP": "Numero_SP", 
+    "ROB: Ratio Robots SP": "Ratio_SP", 
+    "ROB: Rec Addicionals": "Recursos_Adicionales", 
+    "ROB: Rotació Material": "Rotacion_Material",
+    "ROB: TALLADORA 4.0 xTool m1": "XTool_M1", 
+    "ROB: Curs Inicial": "Curso_Inicial", 
+    "ROB: Tipus conveni": "Tipo_Convenio", 
+    "ROB: Último Convenio": "Ultimo_Convenio",
+    "ROB: FI CONVENI": "Vencimiento_Convenio", 
+    "Comentarios": "Comentarios"
+}
 
 # =======================
 # ENDPOINT PRINCIPAL
 # =======================
-
 @app.route('/webhook', methods=['POST'])
 def webhook():
     task_id = request.args.get('id')
@@ -95,30 +119,45 @@ def generate_txt(task_data):
         template = Template(f.read())
 
     custom_fields = task_data.get('custom_fields', [])
-    print ("CUSTOM FIELDS: ", custom_fields)
-    fields = {cf['name']: cf.get('value', '') for cf in custom_fields}
+    fields = {}
+
+    # Recorremos los custom fields y asignamos el valor a la etiqueta del template
+    for cf in custom_fields:
+        original_name = cf.get('name')
+        field_type = cf.get('type')
+        value = cf.get('value')
+
+        if original_name in selected_custom:
+            alias = selected_custom[original_name]
+
+            # Si es un campo de tipo drop-down, extraemos el valor de la opción seleccionada
+            if field_type == 'drop_down' and isinstance(value, dict):
+                selected_option_name = value.get('name', '')
+                fields[alias] = selected_option_name
+
+            # Si no es un drop-down, simplemente asignamos el valor
+            else:
+                fields[alias] = str(value) if value is not None else ''
+
+    # Agregamos el nombre de la tarea
     fields['Nombre_Tarea'] = task_data.get("name", "Sin nombre")
 
+    print("Campos finales para el template:", fields)  # Para depuración
+
+    # Renderizamos el template y escribimos el archivo
     output = template.render(**fields)
     with open("resultados.txt", "w", encoding="utf-8") as f:
         f.write(output)
 
 def download_secret_file_from_github(filename, repo_owner, repo_name, github_token):
-    """
-    Descarga un archivo desde un repositorio privado de GitHub utilizando la API.
-    """
     headers = {
         "Authorization": f"token {github_token}",
         "Accept": "application/vnd.github.v3.raw"
     }
 
-    # Ruta esperada en el repo
     url = f"https://api.github.com/repos/{repo_owner}/{repo_name}/contents/{filename}"
 
-    print(f"🔍 Buscando '{filename}' en:")
-    print(f"   🧑 Repositorio: {repo_owner}/{repo_name}")
-    print(f"   📁 URL: {url}")
-
+    print(f"🔍 Buscando '{filename}' en el repositorio: {repo_owner}/{repo_name}")
     response = requests.get(url, headers=headers)
 
     if response.status_code == 200:
@@ -130,14 +169,12 @@ def download_secret_file_from_github(filename, repo_owner, repo_name, github_tok
         print(f"❌ Error descargando '{filename}': {response.status_code} - {response.text}")
         raise FileNotFoundError(f"No se pudo descargar '{filename}' desde GitHub.")
 
-
-
 def authenticate_gmail_api():
     repo_owner = os.getenv("GITHUB_REPO_OWNER")
     repo_name = os.getenv("GITHUB_REPO_NAME")
     github_token = os.getenv("GITHUB_PAT")
 
-    # Descargamos los archivos desde el repo privado
+    # Descargamos los archivos desde el repositorio privado
     download_secret_file_from_github("credentials.json", repo_owner, repo_name, github_token)
     download_secret_file_from_github("token.json", repo_owner, repo_name, github_token)
     
