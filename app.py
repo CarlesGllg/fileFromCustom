@@ -84,6 +84,7 @@ def generate_txt(task_data):
         template = Template(f.read())
 
     custom_fields = task_data.get('custom_fields', [])
+    print ("CUSTOM FIELDS: ", custom_fields)
     fields = {cf['name']: cf.get('value', '') for cf in custom_fields}
     fields['Nombre_Tarea'] = task_data.get("name", "Sin nombre")
 
