@@ -120,7 +120,11 @@ def generate_txt(task_data):
 
     custom_fields = task_data.get('custom_fields', [])
     fields = {}
-
+    
+    # Obtener la fecha actual en formato dd/mm/yyyy
+    fecha_actual = datetime.today().strftime('%d/%m/%Y')
+    fields['Fecha_Informe'] = fecha_actual  # Añadir al diccionario de campos
+    
     # Recorremos los custom fields y asignamos el valor a la etiqueta del template
     for cf in custom_fields:
         original_name = cf.get('name')
