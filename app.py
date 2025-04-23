@@ -115,54 +115,64 @@ def get_task_info(task_id):
     print("Error al consultar la tarea:", response.text)
     return None
 
-def generate_txt(task_data):
-    from datetime import datetime
+from datetime import datetime
+from jinja2 import Template
 
+def generate_txt(task_data):
     with open("template.txt", "r", encoding="utf-8") as f:
         template = Template(f.read())
 
     custom_fields = task_data.get('custom_fields', [])
     fields = {}
 
-    # Añadir la fecha actual al template
-    fecha_actual = datetime.today().strftime('%d/%m/%Y')
-    fields['Fecha_Informe'] = fecha_actual
+    # Añadir fecha actual en formato dd/mm/yyyy
+    fields['Fecha_Informe'] = datetime.today().strftime('%d/%m/%Y')
 
-    # Procesar custom fields
+    # Procesar los campos personalizados
     for cf in custom_fields:
         original_name = cf.get('name')
         field_type = cf.get('type')
         value = cf.get('value')
         alias = selected_custom.get(original_name)
 
-        if alias:  # Solo si está en el diccionario de campos seleccionados
-            # Si es drop-down, buscamos el nombre de la opción seleccionada
+        if alias:  # Solo si el campo está en el diccionario de campos seleccionados
             if field_type == 'drop_down':
-                selected_option_name = ''
+                selected_name = ''
                 options = cf.get('type_config', {}).get('options', [])
 
-                if isinstance(value, str):  # El valor es el ID de la opción seleccionada
+                # Caso: el valor es un diccionario (raro, pero podría pasar)
+                if isinstance(value, dict):
+                    selected_name = value.get('name', '')
+
+                # Caso: el valor es un string (ID de la opción seleccionada)
+                elif isinstance(value, str):
                     for opt in options:
                         if opt.get('id') == value:
-                            selected_option_name = opt.get('name', '')
+                            selected_name = opt.get('name', '')
                             break
-                elif isinstance(value, dict):  # El valor ya es un objeto con 'name'
-                    selected_option_name = value.get('name', '')
 
-                fields[alias] = selected_option_name
+                # Caso: el valor es un entero (orderindex de la opción seleccionada)
+                elif isinstance(value, int):
+                    for opt in options:
+                        if opt.get('orderindex') == value:
+                            selected_name = opt.get('name', '')
+                            break
+
+                fields[alias] = selected_name
 
             else:
-                # Otros tipos: texto, número, etc.
+                # Cualquier otro tipo de campo
                 fields[alias] = str(value) if value is not None else ''
 
-    # Agregar nombre de la tarea
+    # Agregar nombre de la tarea también
     fields['Nombre_Tarea'] = task_data.get("name", "Sin nombre")
 
-    print("Campos para template:", fields)
+    print("📄 Campos usados para generar resultados.txt:", fields)
 
     output = template.render(**fields)
     with open("resultados.txt", "w", encoding="utf-8") as f:
         f.write(output)
+
 
 def download_secret_file_from_github(filename, repo_owner, repo_name, github_token):
     headers = {
