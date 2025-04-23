@@ -33,6 +33,12 @@ GITHUB_FILES = ["credentials.json", "token.json"]
 
 SCOPES = ['https://www.googleapis.com/auth/gmail.modify']
 
+selected_custom = ["ROB: Codi Client","ROB: Responsable Centre","ROB: Telef. Resp.Centro", "ROB: Email Responsable", "ROB: Director Centro", "ROB: email Director Centro",
+                  "ROB: Dirección Centro", "ROB: Altres emails contacte", "ROB: AP", "ROB: PM", "ROB: Comercial", "ROB: Students", "ROB: Ensenyaments","ROB: Groups",
+                  "ROB: Eventualidad", "ROB: Idioma Contenido", "ROB: Tipos de Dispositivos", "ROB: Tipo de Acceso Plataforma", "ROB: STATUS_Escola", "ROB: Robots CR",
+                  "ROB: Ratio Robots CR", "ROB: Robots SP", "ROB: Ratio Robots SP", "ROB: Rec Addicionals", "ROB: Rotació Material", "ROB: TALLADORA 4.0 xTool m1",
+                  "ROB: Curs Inicial", "ROB: Tipus conveni", "ROB: Último Convenio", "ROB: FI CONVENI", "Comentarios"]
+
 # =======================
 # ENDPOINT PRINCIPAL
 # =======================
