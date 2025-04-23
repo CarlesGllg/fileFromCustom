@@ -116,40 +116,50 @@ def get_task_info(task_id):
     return None
 
 def generate_txt(task_data):
+    from datetime import datetime
+
     with open("template.txt", "r", encoding="utf-8") as f:
         template = Template(f.read())
 
     custom_fields = task_data.get('custom_fields', [])
     fields = {}
-    
-    # Obtener la fecha actual en formato dd/mm/yyyy
+
+    # Añadir la fecha actual al template
     fecha_actual = datetime.today().strftime('%d/%m/%Y')
-    fields['Fecha_Informe'] = fecha_actual  # Añadir al diccionario de campos
-    
-    # Recorremos los custom fields y asignamos el valor a la etiqueta del template
+    fields['Fecha_Informe'] = fecha_actual
+
+    # Procesar custom fields
     for cf in custom_fields:
         original_name = cf.get('name')
         field_type = cf.get('type')
         value = cf.get('value')
+        alias = selected_custom.get(original_name)
 
-        if original_name in selected_custom:
-            alias = selected_custom[original_name]
+        if alias:  # Solo si está en el diccionario de campos seleccionados
+            # Si es drop-down, buscamos el nombre de la opción seleccionada
+            if field_type == 'drop_down':
+                selected_option_name = ''
+                options = cf.get('type_config', {}).get('options', [])
 
-            # Si es un campo de tipo drop-down, extraemos el valor de la opción seleccionada
-            if field_type == 'drop_down' and isinstance(value, dict):
-                selected_option_name = value.get('name', '')
+                if isinstance(value, str):  # El valor es el ID de la opción seleccionada
+                    for opt in options:
+                        if opt.get('id') == value:
+                            selected_option_name = opt.get('name', '')
+                            break
+                elif isinstance(value, dict):  # El valor ya es un objeto con 'name'
+                    selected_option_name = value.get('name', '')
+
                 fields[alias] = selected_option_name
 
-            # Si no es un drop-down, simplemente asignamos el valor
             else:
+                # Otros tipos: texto, número, etc.
                 fields[alias] = str(value) if value is not None else ''
 
-    # Agregamos el nombre de la tarea
+    # Agregar nombre de la tarea
     fields['Nombre_Tarea'] = task_data.get("name", "Sin nombre")
 
-    print("Campos finales para el template:", fields)  # Para depuración
+    print("Campos para template:", fields)
 
-    # Renderizamos el template y escribimos el archivo
     output = template.render(**fields)
     with open("resultados.txt", "w", encoding="utf-8") as f:
         f.write(output)
