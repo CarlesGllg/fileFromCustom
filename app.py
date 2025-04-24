@@ -278,9 +278,9 @@ def create_message_with_attachment(sender, to, subject, body, file_path, cc=None
     raw_message = base64.urlsafe_b64encode(message.as_bytes()).decode('utf-8')
     return {'raw': raw_message}
 
-def send_email_with_attachment(service, sender, to, subject, body, file_path):
+def send_email_with_attachment(service, sender, to, subject, body, file_path, cc=None):
     try:
-        message = create_message_with_attachment(sender, to, subject, body, file_path)
+        message = create_message_with_attachment(sender, to, subject, body, file_path, cc)
         if message:
             sent = service.users().messages().send(userId="me", body=message).execute()
             print(f"📨 Correo enviado con ID: {sent['id']}")
