@@ -24,6 +24,7 @@ app = Flask(__name__)
 
 CLICKUP_TOKEN = os.environ.get("CLICKUP_TOKEN")
 EMAIL_RECIPIENT = os.environ.get("EMAIL_RECIPIENT")
+EMAIL_CC = os.environ.get("EMAIL_CC")
 MAILJET_API_KEY = os.environ.get("API_PUBLICA_MAILJET")
 MAILJET_API_SECRET = os.environ.get("API_SECRETA_MAILJET")
 
@@ -98,7 +99,8 @@ def webhook():
             to=EMAIL_RECIPIENT,
             subject= "📩 Exportación de ficha desde ClickUp: "+task_info.get('name'),
             body="Adjunto el archivo generado a partir de los datos de ClickUp.",
-            file_path="resultados.txt"
+            file_path="resultados.txt",
+            cc=EMAIL_CC
         )
     except Exception as error:
         print(f"Ha ocurrido un error: {error}")
@@ -254,13 +256,14 @@ def authenticate_gmail_api():
 
     return creds
 
-def create_message_with_attachment(sender, to, subject, body, file_path):
+def create_message_with_attachment(sender, to, subject, body, file_path, cc=None):
     message = MIMEMultipart()
     message['From'] = sender
     message['To'] = to
     message['Subject'] = subject
     message.attach(MIMEText(body, 'plain'))
-
+    if cc:
+        message['Cc'] = cc
     try:
         with open(file_path, 'rb') as f:
             part = MIMEBase('application', 'octet-stream')
