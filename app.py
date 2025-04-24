@@ -88,7 +88,7 @@ def webhook():
         return "No se pudo obtener la tarea", 500
 
     custom_f = generate_txt(task_info)
-    uncheck_custom_field(custom_f, TRIGGER_CUSTOM_FIELD)
+    uncheck_custom_field(task_id, custom_f, TRIGGER_CUSTOM_FIELD)
     creds = authenticate_gmail_api()
     try:
         service = build('gmail', 'v1', credentials=creds)
@@ -198,7 +198,7 @@ def download_secret_file_from_github(filename, repo_owner, repo_name, github_tok
         raise FileNotFoundError(f"No se pudo descargar '{filename}' desde GitHub.")
 
 # Función para desmarcar el custom field 'ROB: Generar Informe'
-def uncheck_custom_field(custom_fields, custom_field_name):
+def uncheck_custom_field(task_id, custom_fields, custom_field_name):
     # Buscar el custom field por nombre
     for field in custom_fields:
         if field.get('name') == custom_field_name:
