@@ -30,6 +30,8 @@ MAILJET_API_SECRET = os.environ.get("API_SECRETA_MAILJET")
 GITHUB_TOKEN = os.environ.get("GITHUB_TOKEN")
 GITHUB_REPO_OWNER = os.environ.get("GITHUB_REPO_OWNER")
 GITHUB_REPO_NAME = os.environ.get("GITHUB_REPO_NAME")
+TRIGGER_CUSTOM_FIELD = os.environ.get("TRIGGER_CUSTOM_FIELD")
+
 GITHUB_FILES = ["credentials.json", "token.json"]
 
 SCOPES = ['https://www.googleapis.com/auth/gmail.modify']
@@ -85,7 +87,8 @@ def webhook():
     if not task_info:
         return "No se pudo obtener la tarea", 500
 
-    generate_txt(task_info)
+    custom_f = generate_txt(task_info)
+    uncheck_custom_field(custom_f, TRIGGER_CUSTOM_FIELD)
     creds = authenticate_gmail_api()
     try:
         service = build('gmail', 'v1', credentials=creds)
@@ -172,7 +175,7 @@ def generate_txt(task_data):
     output = template.render(**fields)
     with open("resultados.txt", "w", encoding="utf-8") as f:
         f.write(output)
-
+    return custom_fields
 
 def download_secret_file_from_github(filename, repo_owner, repo_name, github_token):
     headers = {
@@ -206,21 +209,14 @@ def uncheck_custom_field(custom_fields, custom_field_name):
         print(f"❌ No se encontró el campo personalizado {custom_field_name} en la tarea.")
         return
 
-    # Ahora, realizar una solicitud para actualizar el custom field
-    url = f'https://api.clickup.com/api/v2/task/{task_id}/custom/{custom_field_id}'
     headers = {
         'Authorization': CLICKUP_TOKEN
     }
 
-    data = {
-        "custom_fields": [
-            {
-                "id": custom_field_id,
-                "value": False  # Desmarcar el checkbox
-            }
-        ]
-    }
+    data = {"value": False}
 
+    # Ahora, realizar una solicitud para actualizar el custom field
+    url = f'https://api.clickup.com/api/v2/task/{task_id}/field/{custom_field_id}'
     response = requests.put(url, headers=headers, json=data)
     if response.status_code == 200:
         print(f"✅ El campo personalizado {custom_field_name} ha sido desmarcado correctamente en la tarea {task_id}.")
