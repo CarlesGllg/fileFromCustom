@@ -58,5 +58,10 @@ Comentarios:
 
 {{ Comentarios }} 
 
+
+-----------------------------------
+Datos Adicionales:  
+
+{{ Datos_Adicionales }} 
 ===================================
 Fecha: {{ Fecha_Informe }}
