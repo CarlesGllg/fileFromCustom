@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reporte de la Escuela</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        .container {
+            width: 80%;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #4CAF50;
+        }
+        table {
+            width: 100%;
+            margin: 20px 0;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .section-title {
+            background-color: #f1f1f1;
+            padding: 10px;
+            font-weight: bold;
+            margin-top: 30px;
+        }
+        .footer {
+            margin-top: 50px;
+            text-align: center;
+            font-size: 0.8em;
+            color: #777;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>{{ Nombre_Escuela }}</h1>
+
+    <div class="section-title">Datos Generales</div>
+    <table>
+        <tr><th>Código de Cliente</th><td>{{ Codigo_Cliente }}</td></tr>
+        <tr><th>Responsable del Centro</th><td>{{ Resp_Centro }}</td></tr>
+        <tr><th>Teléfono Responsable</th><td>{{ Tel_Resp_Centro }}</td></tr>
+        <tr><th>Email Responsable</th><td>{{ Email_Resp_Centro }}</td></tr>
+        <tr><th>Director del Centro</th><td>{{ Director_Centro }}</td></tr>
+        <tr><th>Email Director del Centro</th><td>{{ Email_Director_Centro }}</td></tr>
+        <tr><th>Dirección del Centro</th><td>{{ Direccion_Centro }}</td></tr>
+        <tr><th>Otros Correos de Contacto</th><td>{{ Otros_Correos }}</td></tr>
+    </table>
+
+    <div class="section-title">Responsables del Centro</div>
+    <table>
+        <tr><th>AP Responsable</th><td>{{ AP_Responsable }}</td></tr>
+        <tr><th>PM Responsable</th><td>{{ PM_Responsable }}</td></tr>
+        <tr><th>Comercial Responsable</th><td>{{ Comercial_Responsable }}</td></tr>
+    </table>
+
+    <div class="section-title">Datos de la Escuela</div>
+    <table>
+        <tr><th>Número de Estudiantes</th><td>{{ Num_Estudiantes }}</td></tr>
+        <tr><th>Enseñanzas</th><td>{{ Ensenyaments }}</td></tr>
+        <tr><th>Número de Grupos</th><td>{{ Num_Grups }}</td></tr>
+        <tr><th>Eventualidad</th><td>{{ Eventualidad }}</td></tr>
+        <tr><th>Idioma del Contenido</th><td>{{ Idioma_Contenido }}</td></tr>
+        <tr><th>Tipos de Dispositivos</th><td>{{ Tipos_Dispositivos }}</td></tr>
+        <tr><th>Tipo de Acceso a Plataforma</th><td>{{ Tipo_Acceso }}</td></tr>
+        <tr><th>Status en ClickUp</th><td>{{ Status_Escuela }}</td></tr>
+    </table>
+
+    <div class="section-title">Datos del Contrato</div>
+    <table>
+        <tr><th>Curso Inicial</th><td>{{ Curso_Inicial }}</td></tr>
+        <tr><th>Tipo de Convenio</th><td>{{ Tipo_Convenio }}</td></tr>
+        <tr><th>Último Convenio Firmado</th><td>{{ Ultimo_Convenio }}</td></tr>
+        <tr><th>Vencimiento del Convenio</th><td>{{ Vencimiento_Convenio }}</td></tr>
+    </table>
+
+    <div class="footer">
+        <p>Fecha del Informe: {{ Fecha_Informe }}</p>
+    </div>
+</div>
+
+</body>
+</html>
