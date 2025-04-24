@@ -3,57 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reporte de la Escuela</title>
+    <title>Informe de la Escuela</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            color: #333;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
         }
         .container {
-            width: 80%;
-            margin: 20px auto;
-            padding: 20px;
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+            margin: auto;
         }
-        h1 {
-            text-align: center;
-            color: #4CAF50;
+        .section-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-top: 20px;
+            text-decoration: underline;
         }
         table {
             width: 100%;
-            margin: 20px 0;
+            margin-top: 10px;
             border-collapse: collapse;
         }
         th, td {
-            padding: 12px;
+            padding: 8px;
             text-align: left;
             border: 1px solid #ddd;
         }
         th {
-            background-color: #4CAF50;
-            color: white;
+            background-color: #f4f4f4;
         }
-        .section-title {
-            background-color: #f1f1f1;
-            padding: 10px;
-            font-weight: bold;
-            margin-top: 30px;
-        }
-        .footer {
-            margin-top: 50px;
-            text-align: center;
-            font-size: 0.8em;
-            color: #777;
+        td {
+            background-color: #fafafa;
         }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>{{ Nombre_Escuela }}</h1>
+    <h1>Informe de la Escuela: {{ Nombre_Escuela }}</h1>
 
     <div class="section-title">Datos Generales</div>
     <table>
@@ -62,13 +51,9 @@
         <tr><th>Teléfono Responsable</th><td>{{ Tel_Resp_Centro }}</td></tr>
         <tr><th>Email Responsable</th><td>{{ Email_Resp_Centro }}</td></tr>
         <tr><th>Director del Centro</th><td>{{ Director_Centro }}</td></tr>
-        <tr><th>Email Director del Centro</th><td>{{ Email_Director_Centro }}</td></tr>
+        <tr><th>Email Director</th><td>{{ Email_Director_Centro }}</td></tr>
         <tr><th>Dirección del Centro</th><td>{{ Direccion_Centro }}</td></tr>
-        <tr><th>Otros Correos de Contacto</th><td>{{ Otros_Correos }}</td></tr>
-    </table>
-
-    <div class="section-title">Responsables del Centro</div>
-    <table>
+        <tr><th>Otros Correos</th><td>{{ Otros_Correos }}</td></tr>
         <tr><th>AP Responsable</th><td>{{ AP_Responsable }}</td></tr>
         <tr><th>PM Responsable</th><td>{{ PM_Responsable }}</td></tr>
         <tr><th>Comercial Responsable</th><td>{{ Comercial_Responsable }}</td></tr>
@@ -82,11 +67,17 @@
         <tr><th>Eventualidad</th><td>{{ Eventualidad }}</td></tr>
         <tr><th>Idioma del Contenido</th><td>{{ Idioma_Contenido }}</td></tr>
         <tr><th>Tipos de Dispositivos</th><td>{{ Tipos_Dispositivos }}</td></tr>
-        <tr><th>Tipo de Acceso a Plataforma</th><td>{{ Tipo_Acceso }}</td></tr>
+        <tr><th>Tipo de Acceso</th><td>{{ Tipo_Acceso }}</td></tr>
         <tr><th>Status en ClickUp</th><td>{{ Status_Escuela }}</td></tr>
     </table>
 
-    <div class="section-title">Datos del Contrato</div>
+    <div class="section-title">Datos de Robots</div>
+    <table>
+        <tr><th>Robots CR</th><td>{{ Numero_CR }} - Ratio: {{ Ratio_CR }}</td></tr>
+        <tr><th>Robots SP</th><td>{{ Numero_SP }} - Ratio: {{ Ratio_SP }}</td></tr>
+    </table>
+
+    <div class="section-title">Contrato</div>
     <table>
         <tr><th>Curso Inicial</th><td>{{ Curso_Inicial }}</td></tr>
         <tr><th>Tipo de Convenio</th><td>{{ Tipo_Convenio }}</td></tr>
@@ -94,9 +85,16 @@
         <tr><th>Vencimiento del Convenio</th><td>{{ Vencimiento_Convenio }}</td></tr>
     </table>
 
-    <div class="footer">
-        <p>Fecha del Informe: {{ Fecha_Informe }}</p>
-    </div>
+    <div class="section-title">Comentarios</div>
+    <p>{{ Comentarios }}</p>
+
+    <div class="section-title">Datos Adicionales</div>
+    <table>
+        <tr><th>Descripción</th><td>{{ Datos_Adicionales }}</td></tr>
+    </table>
+    
+    <div class="section-title">Fecha del Informe</div>
+    <p>{{ Fecha_Informe }}</p>
 </div>
 
 </body>
