@@ -96,7 +96,7 @@ def webhook():
             service,
             sender="c360@robotix.es",
             to=EMAIL_RECIPIENT,
-            subject="📩 Exportación de ficha desde ClickUp",
+            subject= "📩 Exportación de ficha desde ClickUp: "+task_info.get('name'),
             body="Adjunto el archivo generado a partir de los datos de ClickUp.",
             file_path="resultados.txt"
         )
