@@ -217,7 +217,7 @@ def uncheck_custom_field(task_id, custom_fields, custom_field_name):
 
     # Ahora, realizar una solicitud para actualizar el custom field
     url = f'https://api.clickup.com/api/v2/task/{task_id}/field/{custom_field_id}'
-    response = requests.put(url, headers=headers, json=data)
+    response = requests.post(url, headers=headers, json=data)
     if response.status_code == 200:
         print(f"✅ El campo personalizado {custom_field_name} ha sido desmarcado correctamente en la tarea {task_id}.")
     else:
