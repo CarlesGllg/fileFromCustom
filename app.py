@@ -131,6 +131,9 @@ def generate_txt(task_data):
     # Añadir fecha actual en formato dd/mm/yyyy
     fields['Fecha_Informe'] = datetime.today().strftime('%d/%m/%Y')
 
+    # Añadir datos adicionales
+    fields['Datos_Adicionales'] = task_data.get('description')
+    
     # Procesar los campos personalizados
     for cf in custom_fields:
         original_name = cf.get('name')
