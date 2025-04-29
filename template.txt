@@ -3,9 +3,9 @@
 ===================================
 
 - Código de cliente: {{Codigo_Cliente}} 
-- Responsable del centro: {{Resp_Centro}}  
-- Teléfono responsable centro: {{Tel_Resp_Centro}} 
-- Email responsable centro: {{Email_Resp_Centro}} 
+- Coordinador: {{Coordinador}}  
+- Teléfono coordinador: {{Tel_Coordinador}} 
+- Email coordinador: {{Email_Coordinador}} 
 
 - Director del centro: {{Director_Centro}}
 - Email director del centro: {{Email_Director_Centro}}  
