@@ -41,9 +41,9 @@ SCOPES = ['https://www.googleapis.com/auth/gmail.modify']
 selected_custom = {
     "ROB: Nom Escola": "Nombre_Escuela", 
     "ROB: Codi Client": "Codigo_Cliente", 
-    "ROB: Responsable Centre": "Resp_Centro", 
-    "ROB: Telef. Resp.Centro": "Tel_Resp_Centro", 
-    "ROB: Email Responsable": "Email_Resp_Centro", 
+    "ROB: Coordinador": "Coordinador", 
+    "ROB: Telef. Coordinador": "Tel_Coordinador", 
+    "ROB: Email Coordinador": "Email_Coordinador", 
     "ROB: Director Centro": "Director_Centro", 
     "ROB: email Director Centro": "Email_Director_Centro", 
     "ROB: Dirección Centro": "Direccion_Centro",
